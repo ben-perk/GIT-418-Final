@@ -39,13 +39,16 @@ function loadDemoContestants() {
                     contestantNames[c.number] = c.name;
                 });
 
-                // Update display
+                // Update display with table format
                 const display = document.getElementById("contestantListDisplay");
-                let html = "<h4>Demo Contestants Loaded</h4><ul>";
+                let html = "<h4>Demo Contestants Loaded</h4>";
+                html += "<table style='border-collapse: collapse; width: 100%;'>";
+                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
+                html += "<tbody>";
                 data.contestants.forEach(c => {
-                    html += `<li><strong>#${c.number}</strong> — ${c.name}</li>`;
+                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
                 });
-                html += "</ul>";
+                html += "</tbody></table>";
                 display.innerHTML = html;
 
                 // Save stored values
