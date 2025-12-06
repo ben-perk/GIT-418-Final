@@ -621,59 +621,46 @@ function loadAllDemo() {
         console.log('XHR loaded, status:', xhr.status);
         if (xhr.status === 200) {
             try {
-                console.log('Response text:', xhr.responseText.substring(0, 100));
+                console.log('Raw response:', xhr.responseText);
                 const data = JSON.parse(xhr.responseText);
-                console.log('Parsed data:', data);
+                console.log('Parsed successfully:', data);
 
-                // Validate data structure
-                if (!data) {
-                    alert("Data is null or undefined");
+                if (!data || typeof data !== 'object') {
+                    alert("Invalid data structure");
                     return;
                 }
-                
-                console.log('Contestants:', data.contestants);
-                console.log('Judges:', data.judges);
-                console.log('Categories:', data.categories);
 
-                // Load contestants
+                // Load contestants - with safety checks
                 contestants = [];
                 contestantNames = {};
-                if (data.contestants && Array.isArray(data.contestants)) {
+                if (data.contestants && Array.isArray(data.contestants) && data.contestants.length > 0) {
                     data.contestants.forEach(c => {
-                        if (c && c.number !== undefined && c.name) {
+                        if (c && typeof c === 'object' && c.number !== undefined && c.name) {
                             contestants.push(c.number);
                             contestantNames[c.number] = c.name;
                         }
                     });
-                } else {
-                    alert("Contestants array is missing or invalid");
-                    return;
+                    console.log('Loaded contestants:', contestants);
                 }
 
-                // Load judges
+                // Load judges - with safety checks
                 judges = [];
-                if (data.judges && Array.isArray(data.judges)) {
-                    data.judges.forEach(j => {
-                        judges.push(j);
-                    });
-                } else {
-                    alert("Judges array is missing or invalid");
-                    return;
+                if (data.judges && Array.isArray(data.judges) && data.judges.length > 0) {
+                    judges = data.judges.slice();
+                    console.log('Loaded judges:', judges);
                 }
 
-                // Load categories
+                // Load categories - with safety checks
                 categories = [];
                 categoryNames = {};
-                if (data.categories && Array.isArray(data.categories)) {
+                if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
                     data.categories.forEach(cat => {
-                        if (cat && cat.name) {
+                        if (cat && typeof cat === 'object' && cat.name) {
                             categories.push(cat.name);
                             categoryNames[cat.name] = cat.name;
                         }
                     });
-                } else {
-                    alert("Categories array is missing or invalid");
-                    return;
+                    console.log('Loaded categories:', categories);
                 }
 
                 // Clear existing scores
@@ -681,15 +668,15 @@ function loadAllDemo() {
                     delete scoresData[key];
                 }
 
-                // Initialize category arrays in scoresData
+                // Initialize category arrays
                 categories.forEach(cat => {
                     scoresData[cat] = [];
                 });
 
-                // Load scores into scoresData structured by category
-                if (data.scores && Array.isArray(data.scores)) {
+                // Load scores - with safety checks
+                if (data.scores && Array.isArray(data.scores) && data.scores.length > 0) {
                     data.scores.forEach(score => {
-                        if (score && score.category) {
+                        if (score && typeof score === 'object' && score.category && score.contestant !== undefined && score.judge !== undefined && score.score !== undefined) {
                             if (!scoresData[score.category]) {
                                 scoresData[score.category] = [];
                             }
@@ -700,12 +687,8 @@ function loadAllDemo() {
                             });
                         }
                     });
-                } else {
-                    alert("Scores array is missing or invalid");
-                    return;
+                    console.log('Loaded scores:', scoresData);
                 }
-
-                console.log('Final scoresData:', scoresData);
 
                 // Save to localStorage
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
@@ -721,27 +704,23 @@ function loadAllDemo() {
                 updateCategoryDisplay();
                 generateScoreTables();
 
-                // Calculate final scores automatically
+                // Calculate final scores
                 setTimeout(() => {
                     calculateFinalScores();
-                    alert("Demo data loaded successfully! Scores have been calculated.");
+                    alert("Demo data loaded successfully!");
                 }, 300);
 
             } catch (err) {
-                console.error("Error parsing JSON:", err);
-                console.error("Error message:", err.message);
-                console.error("Error stack:", err.stack);
-                alert("Could not parse demo JSON: " + err.message);
+                console.error("Parse error:", err);
+                alert("Error: " + err.message);
             }
         } else {
-            console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file. Status: " + xhr.status);
+            alert("Failed to load example.json (Status: " + xhr.status + ")");
         }
     };
 
-    xhr.onerror = function(e) {
-        console.error("XMLHttpRequest error occurred:", e);
-        alert("Network error when loading demo JSON. Make sure example.json exists in the same directory.");
+    xhr.onerror = function() {
+        alert("Cannot load example.json - check file exists in root directory");
     };
 
     xhr.send();
