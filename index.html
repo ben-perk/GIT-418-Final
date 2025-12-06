@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Benjamin P">
+    <meta name="description" content="A fast and easy pageant score calculator to speed up and check scoring at pageants">
+    <title>Pageant Calculator</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="#home" class="navbar-brand">Pageant Calculator</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contestants" class="nav-link">Contestants</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#categories" class="nav-link">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#judges" class="nav-link">Judges</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#scores" class="nav-link">Final Scores</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Welcome Section -->
+            <section id="home" class="mb-4">
+                <div class="p-3 bg-light rounded">
+                    <h1>Welcome to the Pageant Calculator</h1>
+                    <p>I am tired of it taking an hour to count the scores</p>
+                    <p>Input the number of Contestants, Judges, and Categories along with the category names</p>
+                </div>
+            </section>
+
+            <!-- Setup Accordion -->
+            <section id="setupAccordion" class="mb-4">
+                <div id="accordion">
+                    <!-- Contestant Setup -->
+                    <h3>Contestant Setup</h3>
+                    <div id="contestants">
+                        <p>Enter the number of contestants competing in this pageant.</p>
+                        <div class="mb-3">
+                            <label for="numContestants" class="form-label">Number of Contestants:</label>
+                            <input type="number" id="numContestants" class="form-control" min="1" placeholder="Enter number">
+                        </div>
+                        <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
+                        <div id="contestantListDisplay" class="mt-3"></div>
+                    </div>
+
+                    <!-- Category Setup -->
+                    <h3>Category Setup</h3>
+                    <div id="categories">
+                        <p>Enter the number of categories and their names.</p>
+                        <div class="mb-3">
+                            <label for="numCategories" class="form-label">Number of Categories:</label>
+                            <input type="number" id="numCategories" class="form-control" min="1" placeholder="Enter number">
+                        </div>
+                        <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
+                        <div id="categoryInputsDisplay" class="mt-3"></div>
+                    </div>
+
+                    <!-- Judge Setup -->
+                    <h3>Judge Setup</h3>
+                    <div id="Judges">
+                        <p>Enter the number of judges for this pageant.</p>
+                        <div class="mb-3">
+                            <label for="numJudges" class="form-label">Number of Judges:</label>
+                            <input type="number" id="numJudges" class="form-control" min="1" placeholder="Enter number">
+                        </div>
+                        <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
+                        <div id="judgeListDisplay" class="mt-3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Score Entry Table Section -->
+            <section id="scoreTableSection" class="mb-4" style="display: none;">
+                <div class="p-3 bg-light rounded">
+                    <h2>Enter Scores by Category</h2>
+                    <div id="scoreTableContainer"></div>
+                </div>
+            </section>
+
+            <!-- Final Scores Section -->
+            <section id="scores" class="mb-4">
+                <div class="p-3 bg-white rounded border">
+                    <h2>Final Scores</h2>
+                    <div class="mb-3">
+                        <label for="outlierToggle" class="form-check-label">
+                            <input type="checkbox" id="outlierToggle" class="form-check-input">
+                            Remove Highest and Lowest Scores of each Category
+                        </label>
+                    </div>
+                    <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
+                    <button class="btn btn-primary" id="exportBtn">Export Scores to CSV</button>
+                    <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
+                    <div id="finalScoresDisplay" class="mt-3"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
+    </footer>
+
+    <!-- jQuery and jQuery UI for Accordion Widget -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
+
+    <!-- Main  Script -->
+    <script defer src="improved.js"></script>
+</body>
+</html>
