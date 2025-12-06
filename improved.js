@@ -1,26 +1,26 @@
 "use strict";
 
-// Store contestant numbers and names
+// store contestant numbers and names
 let contestants = [];
 let contestantNames = {};
 
-// Store judge numbers
+// store judge numbers
 let judges = [];
 
-// Store category names
+// store category names
 let categories = [];
 let categoryNames = {};
 
-// Store all scores
+// store all scores
 const scoresData = {};
 
-// Check if we should remove high and low scores
+// check if we should remove high and low scores
 let dropOutliers = false;
 
-// Carousel variables
+// carousel variables
 let currentCarouselIndex = 0;
 
-// Create contestant list
+// create contestant list
 function setupContestants() {
     console.log('setupContestants called');
     const numInput = document.getElementById('numContestants');
@@ -58,7 +58,7 @@ function setupContestants() {
     localStorage.setItem('pageantContestants', JSON.stringify(contestants));
 }
 
-// Create category list
+// create category list
 function setupCategories() {
     console.log('setupCategories called');
     const numInput = document.getElementById('numCategories');
@@ -128,7 +128,7 @@ function saveCategoryNames() {
     alert('Category names saved!');
 }
 
-// Create judge list
+// create judge list
 function setupJudges() {
     console.log('setupJudges called');
     const numInput = document.getElementById('numJudges');
@@ -164,7 +164,7 @@ function setupJudges() {
     localStorage.setItem('pageantJudges', JSON.stringify(judges));
 }
 
-// Create the score input tables for each category
+// create the score input tables for each category
 function generateScoreTables() {
     const scoreTableSection = document.getElementById('scoreTableSection');
     const scoreTableContainer = document.getElementById('scoreTableContainer');
@@ -239,7 +239,7 @@ function generateScoreTables() {
     scoreTableContainer.innerHTML = html;
     scoreTableSection.style.display = 'block';
 
-    // Attach save button listeners
+    // attach save button listeners
     const saveButtons = scoreTableContainer.querySelectorAll('button.btn-success');
     saveButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -247,14 +247,14 @@ function generateScoreTables() {
         });
     });
 
-    // Attach calculate button listener
+    // attach calculate button listener
     const calcBtn = document.getElementById('calcBtn');
     if (calcBtn) {
         calcBtn.addEventListener('click', calculateFinalScores);
     }
 }
 
-// Save all scores for one category
+// save all scores for one category
 function saveScoresForCategory(category) {
     scoresData[category] = [];
 
@@ -286,12 +286,12 @@ function saveScoresForCategory(category) {
     saveToStorage();
 }
 
-// Turn on/off outlier removal
+// turn on/off outlier removal
 function toggleOutliers() {
     dropOutliers = !dropOutliers;
 }
 
-// Clear all data and reset the calculator
+// clear all data and reset the calculator
 function clearAllData() {
     if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
         contestants = [];
@@ -326,7 +326,7 @@ function clearAllData() {
     }
 }
 
-// Export scores to CSV file
+// export scores to csv file
 function exportToCSV() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please enter some scores first.');
@@ -352,7 +352,7 @@ function exportToCSV() {
     alert('Scores exported successfully!');
 }
 
-// Remove the highest and lowest score from a list
+// remove the highest and lowest score from a list
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
         return scores;
@@ -381,37 +381,38 @@ function getAdjustedScores(scores) {
     return adjusted;
 }
 
-// Carousel functions
+// carousel functions
 function carouselNext() {
-    const slides = document.querySelectorAll('.carousel-slide-inline');
+    const slides = document.querySelectorAll('.carousel-slide');
     if (slides.length === 0) return;
     currentCarouselIndex = (currentCarouselIndex + 1) % slides.length;
     carouselShow(currentCarouselIndex);
 }
 
 function carouselPrev() {
-    const slides = document.querySelectorAll('.carousel-slide-inline');
+    const slides = document.querySelectorAll('.carousel-slide');
     if (slides.length === 0) return;
     currentCarouselIndex = (currentCarouselIndex - 1 + slides.length) % slides.length;
     carouselShow(currentCarouselIndex);
 }
 
 function carouselShow(n) {
-    const slides = document.querySelectorAll('.carousel-slide-inline');
-    const dots = document.querySelectorAll('.dot-inline');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const counter = document.getElementById('carouselCounter');
     
     if (slides.length === 0) return;
     if (n >= slides.length) currentCarouselIndex = 0;
     if (n < 0) currentCarouselIndex = slides.length - 1;
     
     slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
-    
     slides[currentCarouselIndex].classList.add('active');
-    dots[currentCarouselIndex].classList.add('active');
+    
+    if (counter) {
+        counter.textContent = (currentCarouselIndex + 1) + ' / ' + slides.length;
+    }
 }
 
-// Calculate final scores and rank contestants
+// calculate final scores and rank contestants
 function calculateFinalScores() {
     console.log('calculateFinalScores called');
     const contestantScores = {};
@@ -493,35 +494,94 @@ function calculateFinalScores() {
         }
     }
 
+    console.log('Final calculation results (pre-display):', results);
     displayFinalScores(results);
 }
 
-// Show all the results on the page
+// show all the results on the page
 function displayFinalScores(results) {
     const display = document.getElementById('finalScoresDisplay');
+    const carouselContainer = document.getElementById('carouselContainer');
+    const carouselSlides = document.getElementById('carouselSlides');
+    
+    if (!display) return;
+    
+    // clear previous content
+    display.innerHTML = '';
+    carouselSlides.innerHTML = '';
+    currentCarouselIndex = 0;
+    
+    // create carousel slides for each result
+    if (results.length > 0) {
+        const rankLabels = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
+        
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            const rankLabel = rankLabels[i] || 'Rank #' + (i + 1);
+            
+            let slideHtml = '<div class="carousel-slide' + (i === 0 ? ' active' : '') + '">';
+            slideHtml += '<h3>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h3>';
+            slideHtml += '<p><strong>Total Score:</strong> ' + result.total + '</p>';
+            slideHtml += '<p><strong>Average Score:</strong> ' + result.average + '</p>';
+            
+            slideHtml += '<h4>Category Breakdown:</h4>';
+            slideHtml += '<table>';
+            slideHtml += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
+            slideHtml += '<tbody>';
+            
+            for (let j = 0; j < categories.length; j++) {
+                const category = categories[j];
+                const categoryScores = result.categoryBreakdown[category];
+                
+                let totalCategoryScore = 0;
+                if (categoryScores && categoryScores.length > 0) {
+                    for (let k = 0; k < categoryScores.length; k++) {
+                        totalCategoryScore += categoryScores[k];
+                    }
+                }
+                
+                const categoryName = categoryNames[category];
+                const categoryAverage = result.categoryAverages[category];
+                slideHtml += '<tr>';
+                slideHtml += '<td>' + categoryName + '</td>';
+                slideHtml += '<td><strong>' + totalCategoryScore + '</strong></td>';
+                slideHtml += '<td><strong>' + categoryAverage + '</strong></td>';
+                slideHtml += '</tr>';
+            }
+            
+            slideHtml += '</tbody></table>';
+            slideHtml += '</div>';
+            
+            carouselSlides.innerHTML += slideHtml;
+        }
+        
+        // show carousel and update counter
+        carouselContainer.style.display = 'block';
+        const counter = document.getElementById('carouselCounter');
+        if (counter) {
+            counter.textContent = '1 / ' + results.length;
+        }
+        
+        // attach event listeners to carousel buttons
+        const prevBtn = document.getElementById('carouselPrevBtn');
+        const nextBtn = document.getElementById('carouselNextBtn');
+        if (prevBtn) prevBtn.removeEventListener('click', carouselPrev);
+        if (nextBtn) nextBtn.removeEventListener('click', carouselNext);
+        if (prevBtn) prevBtn.addEventListener('click', carouselPrev);
+        if (nextBtn) nextBtn.addEventListener('click', carouselNext);
+    } else {
+        carouselContainer.style.display = 'none';
+    }
+
+    // also display traditional final scores view below carousel
     let html = '';
     
     if (dropOutliers) {
         html += '<p><em>Outliers Removed</em></p>';
     }
 
-    html += '<div class="card mb-4">';
-    html += '<div class="card-header"><h4>WINNERS & SUMMARY</h4></div>';
-    html += '<div class="card-body">';
-
-    html += '<p><strong>Ranking Method:</strong> Total Scores</p>';
-    html += '<h5>Overall Winner:</h5>';
-    
-    if (results.length > 0) {
-        html += '<p><strong>Contestant #' + results[0].contestantNumber + '</strong> - Total: ' + results[0].total + '</p>';
-    }
-
-    html += '</div>';
-    html += '</div>';
-
-    html += '<div class="card mb-4">';
-    html += '<div class="card-header"><h4>All Rankings</h4></div>';
-    html += '<div class="card-body">';
+    html += '<div style="margin-top: 2rem;">';
+    html += '<h3>All Rankings - Detailed View</h3>';
 
     const rankLabels = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
 
@@ -529,11 +589,14 @@ function displayFinalScores(results) {
         const result = results[i];
         const rankLabel = rankLabels[i] || 'Rank #' + (i + 1);
         
-        html += '<div class="mb-3">';
-        html += '<h5>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h5>';
+        html += '<div style="margin: 1.5rem 0; padding: 1rem; border: 1px solid #ddd;">';
+        html += '<h4>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h4>';
         
-        html += '<h6>Category Breakdown:</h6>';
-        html += '<table class="table table-sm">';
+        html += '<p><strong>Total Score:</strong> ' + result.total + '</p>';
+        html += '<p><strong>Average Score:</strong> ' + result.average + '</p>';
+        
+        html += '<h5>Category Breakdown:</h5>';
+        html += '<table class="demo-table">';
         html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
         html += '<tbody>';
         
@@ -559,22 +622,19 @@ function displayFinalScores(results) {
         }
         
         html += '</tbody></table>';
-        html += '<p><strong>Total All Scores:</strong> ' + result.total + '</p>';
         html += '</div>';
     }
 
     html += '</div>';
-    html += '</div>';
-
     display.innerHTML = html;
 }
 
-// Save scores to browser storage
+// save scores to browser storage
 function saveToStorage() {
     localStorage.setItem('pageantScores', JSON.stringify(scoresData));
 }
 
-// Load saved data from browser storage when page opens
+// load saved data from browser storage when page opens
 function loadFromStorage() {
     const storedContestants = localStorage.getItem('pageantContestants');
     if (storedContestants) {
@@ -611,7 +671,7 @@ function loadFromStorage() {
     }
 }
 
-// DEMO DATA - Load all demo data from example.json using AJAX
+// demo data - load all demo data from example.json using ajax
 function loadAllDemo() {
     console.log('Starting demo data load...');
     const xhr = new XMLHttpRequest();
@@ -630,7 +690,7 @@ function loadAllDemo() {
                     return;
                 }
 
-                // Load contestants - with safety checks
+                // load contestants - with safety checks
                 contestants = [];
                 contestantNames = {};
                 if (data.contestants && Array.isArray(data.contestants) && data.contestants.length > 0) {
@@ -643,14 +703,14 @@ function loadAllDemo() {
                     console.log('Loaded contestants:', contestants);
                 }
 
-                // Load judges - with safety checks
+                // load judges - with safety checks
                 judges = [];
                 if (data.judges && Array.isArray(data.judges) && data.judges.length > 0) {
                     judges = data.judges.slice();
                     console.log('Loaded judges:', judges);
                 }
 
-                // Load categories - with safety checks
+                // load categories - with safety checks
                 categories = [];
                 categoryNames = {};
                 if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
@@ -663,17 +723,17 @@ function loadAllDemo() {
                     console.log('Loaded categories:', categories);
                 }
 
-                // Clear existing scores
+                // clear existing scores
                 for (const key in scoresData) {
                     delete scoresData[key];
                 }
 
-                // Initialize category arrays
+                // initialize category arrays
                 categories.forEach(cat => {
                     scoresData[cat] = [];
                 });
 
-                // Load scores - with safety checks
+                // load scores - with safety checks
                 if (data.scores && Array.isArray(data.scores) && data.scores.length > 0) {
                     data.scores.forEach(score => {
                         if (score && typeof score === 'object' && score.category && score.contestant !== undefined && score.judge !== undefined && score.score !== undefined) {
@@ -690,7 +750,7 @@ function loadAllDemo() {
                     console.log('Loaded scores:', scoresData);
                 }
 
-                // Save to localStorage
+                // save to localstorage
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
                 localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
                 localStorage.setItem("pageantJudges", JSON.stringify(judges));
@@ -698,13 +758,13 @@ function loadAllDemo() {
                 localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
                 localStorage.setItem("pageantScores", JSON.stringify(scoresData));
 
-                // Update displays
+                // update displays
                 updateContestantDisplay();
                 updateJudgeDisplay();
                 updateCategoryDisplay();
                 generateScoreTables();
 
-                // Calculate final scores
+                // calculate final scores
                 setTimeout(() => {
                     calculateFinalScores();
                     alert("Demo data loaded successfully!");
@@ -726,7 +786,7 @@ function loadAllDemo() {
     xhr.send();
 }
 
-// Helper function to update contestant display
+// helper function to update contestant display
 function updateContestantDisplay() {
     const display = document.getElementById('contestantListDisplay');
     if (display) {
@@ -742,7 +802,7 @@ function updateContestantDisplay() {
     }
 }
 
-// Helper function to update judge display
+// helper function to update judge display
 function updateJudgeDisplay() {
     const display = document.getElementById('judgeListDisplay');
     if (display) {
@@ -758,7 +818,7 @@ function updateJudgeDisplay() {
     }
 }
 
-// Helper function to update category display
+// helper function to update category display
 function updateCategoryDisplay() {
     const display = document.getElementById('categoryInputsDisplay');
     if (display) {
@@ -774,20 +834,20 @@ function updateCategoryDisplay() {
     }
 }
 
-// MAIN INITIALIZATION - Only runs once when DOM is ready
+// main initialization - only runs once when dom is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== DOM Content Loaded ===');
     
-    // Load stored data
+    // load stored data
     loadFromStorage();
     
-    // Initialize accordion
+    // initialize accordion
     $("#accordion").accordion({
         collapsible: true,
         active: 0
     });
     
-    // Get all buttons
+    // get all buttons
     const createContestantBtn = document.getElementById('createContestantBtn');
     const createCategoryBtn = document.getElementById('createCategoryBtn');
     const createJudgeBtn = document.getElementById('createJudgeBtn');

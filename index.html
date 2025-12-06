@@ -36,7 +36,7 @@
 
     <main>
         <div class="container">
-            <!-- Welcome Section -->
+            <!-- welcome section -->
             <section id="home" class="mb-4">
                 <div class="p-3 bg-light rounded">
                     <h1>Welcome to the Pageant Calculator</h1>
@@ -49,10 +49,10 @@
                 <button class="btn btn-info" id="loadDemoBtn">Demo Data</button>
             </div>
 
-            <!-- Setup Accordion -->
+            <!-- setup accordion -->
             <section id="setupAccordion" class="mb-4">
                 <div id="accordion">
-                    <!-- Contestant Setup -->
+                    <!-- contestant setup -->
                     <h3>Contestant Setup</h3>
                     <div id="contestants">
                         <p>Enter the number of contestants competing in this pageant.</p>
@@ -64,7 +64,7 @@
                         <div id="contestantListDisplay" class="mt-3"></div>
                     </div>
 
-                    <!-- Category Setup -->
+                    <!-- category setup -->
                     <h3>Category Setup</h3>
                     <div id="categories">
                         <p>Enter the number of categories and their names.</p>
@@ -76,7 +76,7 @@
                         <div id="categoryInputsDisplay" class="mt-3"></div>
                     </div>
 
-                    <!-- Judge Setup -->
+                    <!-- judge setup -->
                     <h3>Judge Setup</h3>
                     <div id="judges">
                         <p>Enter the number of judges for this pageant.</p>
@@ -90,7 +90,7 @@
                 </div>
             </section>
 
-            <!-- Score Entry Table Section -->
+            <!-- score entry table section -->
             <section id="scoreTableSection" class="mb-4">
                 <div class="p-3 bg-light rounded">
                     <h2>Enter Scores by Category</h2>
@@ -98,20 +98,31 @@
                 </div>
             </section>
 
-            <!-- Final Scores Section -->
+            <!-- final scores section -->
             <section id="scores" class="mb-4">
-                <div class="p-3 bg-white rounded border">
+                <div class="content-box">
                     <h2>Final Scores</h2>
-                    <div class="mb-3">
-                        <label for="outlierToggle" class="form-check-label">
-                            <input type="checkbox" id="outlierToggle" class="form-check-input">
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; font-weight: normal; color: #000; gap: 0.5rem;">
+                            <input type="checkbox" id="outlierToggle" style="width: auto; margin: 0; cursor: pointer;">
                             Remove Highest and Lowest Scores of each Category
                         </label>
                     </div>
-                    <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
-                    <button class="btn btn-primary" id="exportBtn">Export Scores to CSV</button>
-                    <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
-                    <div id="finalScoresDisplay" class="mt-3"></div>
+                    <button class="btn-custom" id="calculateBtn">Calculate Final Scores</button>
+                    <button class="btn-custom btn-margin-left" id="exportBtn">Export Scores to CSV</button>
+                    <button class="btn-custom btn-margin-left" id="clearBtn">Clear All Data</button>
+                    
+                    <!-- carousel for results -->
+                    <div id="carouselContainer" class="carousel-container" style="display: none; margin-top: 2rem;">
+                        <div id="carouselSlides" class="carousel-slides"></div>
+                        <div class="carousel-controls">
+                            <button class="carousel-btn" id="carouselPrevBtn">← Previous</button>
+                            <span id="carouselCounter" class="carousel-counter">1 / 1</span>
+                            <button class="carousel-btn" id="carouselNextBtn">Next →</button>
+                        </div>
+                    </div>
+                    
+                    <div id="finalScoresDisplay" class="display-section"></div>
                 </div>
             </section>
         </div>
@@ -121,11 +132,11 @@
         <p>&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
     </footer>
 
-    <!-- jQuery and jQuery UI for Accordion Widget -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jquery and jquery ui for accordion widget -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
 
-    <!-- Main Script -->
+    <!-- main script -->
     <script defer src="improved.js"></script>
 </body>
 </html>

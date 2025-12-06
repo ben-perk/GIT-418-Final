@@ -318,7 +318,7 @@ button:active,
     margin-bottom: 1rem;
 }
 
-/* jQuery UI Accordion overrides */
+/* jquery ui accordion overrides */
 .ui-accordion {
     border: 2px solid #000;
 }
@@ -815,7 +815,7 @@ footer p {
     }
 }
 
-/* Demo Table Styles */
+/* demo table styles */
 .demo-table {
     border-collapse: collapse;
     width: 100%;
@@ -836,7 +836,7 @@ footer p {
     background-color: #f9f9f9;
 }
 
-/* Button Styles */
+/* button styles */
 .btn-custom {
     background-color: #000;
     color: #fff;
@@ -860,7 +860,86 @@ footer p {
     margin-left: 0.5rem;
 }
 
-/* Input and Label Styles */
+/* carousel styles */
+.carousel-container {
+    border: 2px solid #000;
+    padding: 2rem;
+    margin: 2rem 0;
+    background-color: #f9f9f9;
+}
+
+.carousel-slides {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    margin-bottom: 1.5rem;
+}
+
+.carousel-slide {
+    display: none;
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.carousel-slide.active {
+    display: block;
+}
+
+.carousel-slide h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+.carousel-slide table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.carousel-slide table th,
+.carousel-slide table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.carousel-slide table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.carousel-btn {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.carousel-btn:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.carousel-counter {
+    font-weight: bold;
+    color: #000;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* input and label styles */
 .form-label {
     display: block;
     color: #000;
@@ -878,7 +957,7 @@ footer p {
     margin-bottom: 1.5rem;
 }
 
-/* Display Sections */
+/* display sections */
 .display-section {
     margin-top: 1.5rem;
 }
