@@ -621,27 +621,39 @@ function loadAllDemo() {
             try {
                 const data = JSON.parse(xhr.responseText);
 
+                // Validate data structure
+                if (!data || !data.contestants || !data.judges || !data.categories || !data.scores) {
+                    alert("Invalid JSON structure. Missing required fields.");
+                    return;
+                }
+
                 // Load contestants
                 contestants = [];
                 contestantNames = {};
-                data.contestants.forEach(c => {
-                    contestants.push(c.number);
-                    contestantNames[c.number] = c.name;
-                });
+                if (Array.isArray(data.contestants)) {
+                    data.contestants.forEach(c => {
+                        contestants.push(c.number);
+                        contestantNames[c.number] = c.name;
+                    });
+                }
 
                 // Load judges
                 judges = [];
-                data.judges.forEach(j => {
-                    judges.push(j);
-                });
+                if (Array.isArray(data.judges)) {
+                    data.judges.forEach(j => {
+                        judges.push(j);
+                    });
+                }
 
                 // Load categories
                 categories = [];
                 categoryNames = {};
-                data.categories.forEach(cat => {
-                    categories.push(cat.id);
-                    categoryNames[cat.id] = cat.name;
-                });
+                if (Array.isArray(data.categories)) {
+                    data.categories.forEach(cat => {
+                        categories.push(cat.name); // Use name instead of id
+                        categoryNames[cat.name] = cat.name; // Map name to name
+                    });
+                }
 
                 // Clear existing scores
                 for (const key in scoresData) {
@@ -654,13 +666,19 @@ function loadAllDemo() {
                 });
 
                 // Load scores into scoresData structured by category
-                data.scores.forEach(score => {
-                    scoresData[score.category].push({
-                        contestantNumber: score.contestant,
-                        judgeNumber: score.judge,
-                        score: score.score
+                if (Array.isArray(data.scores)) {
+                    data.scores.forEach(score => {
+                        // Use score.category directly (it has the name like "Evening Gown")
+                        if (!scoresData[score.category]) {
+                            scoresData[score.category] = [];
+                        }
+                        scoresData[score.category].push({
+                            contestantNumber: score.contestant,
+                            judgeNumber: score.judge,
+                            score: score.score
+                        });
                     });
-                });
+                }
 
                 // Save to localStorage
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
@@ -684,17 +702,17 @@ function loadAllDemo() {
 
             } catch (err) {
                 console.error("Error parsing JSON:", err);
-                alert("Could not parse demo JSON. Check console for details.");
+                alert("Could not parse demo JSON: " + err.message);
             }
         } else {
             console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file. Make sure example.json exists in the same directory.");
+            alert("Could not load demo JSON file. Status: " + xhr.status);
         }
     };
 
     xhr.onerror = function() {
         console.error("XMLHttpRequest error occurred");
-        alert("Network error when loading demo JSON.");
+        alert("Network error when loading demo JSON. Make sure example.json exists in the same directory.");
     };
 
     xhr.send();
