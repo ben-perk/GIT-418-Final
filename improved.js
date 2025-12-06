@@ -20,6 +20,43 @@ let dropOutliers = false;
 // Carousel variables for winners
 let currentCarouselIndex = 0;
 
+
+// demo data
+async function loadDemoContestants() {
+    try {
+        const response = await fetch("example.json");
+        const data = await response.json();
+
+        contestants = [];
+        contestantNames = {};
+
+        data.contestants.forEach(c => {
+            contestants.push(c.number);
+            contestantNames[c.number] = c.name;
+        });
+
+        // Update display
+        const display = document.getElementById("contestantListDisplay");
+        let html = "<h4>Demo Contestants Loaded</h4><ul>";
+        data.contestants.forEach(c => {
+            html += `<li><strong>#${c.number}</strong> — ${c.name}</li>`;
+        });
+        html += "</ul>";
+        display.innerHTML = html;
+
+        // Save stored values
+        localStorage.setItem("pageantContestants", JSON.stringify(contestants));
+        localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+
+        alert("Demo contestants loaded!");
+
+    } catch (err) {
+        console.error("Error loading demo contestants JSON:", err);
+        alert("Could not load demo JSON.");
+    }
+}
+
+
 //  Save and Load Functions
 
 function saveToStorage() {
@@ -777,4 +814,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('exportBtn').addEventListener('click', exportToCSV);
     document.getElementById('clearBtn').addEventListener('click', clearAllData);
     document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
+    document.getElementById("loadDemoBtn").addEventListener("click", loadDemoContestants);
 });
