@@ -121,6 +121,19 @@ function loadAllDemo() {
                     console.log("Categories displayed");
                 }
 
+                // Generate score tables
+                generateScoreTables();
+
+                // Populate score input fields with demo data
+                for (const score of data.scores) {
+                    const inputId = `score-${score.contestant}-${score.judge}-${score.category}`;
+                    const scoreInput = document.getElementById(inputId);
+                    if (scoreInput) {
+                        scoreInput.value = score.score;
+                    }
+                }
+                console.log("Score inputs populated");
+
                 alert("All demo data loaded successfully!");
             } catch (err) {
                 console.error("Error parsing JSON:", err);
