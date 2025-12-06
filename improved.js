@@ -65,15 +65,23 @@ function loadAllDemo() {
                     });
                 }
 
+                // Save to localStorage
+                localStorage.setItem("pageantContestants", JSON.stringify(contestants));
+                localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+                localStorage.setItem("pageantJudges", JSON.stringify(judges));
+                localStorage.setItem("pageantCategories", JSON.stringify(categories));
+                localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
+                localStorage.setItem("pageantScores", JSON.stringify(scoresData));
+
                 // Display contestants
                 const contestantDisplay = document.getElementById("contestantListDisplay");
                 if (contestantDisplay) {
                     let contestantHtml = "<h4>Demo Contestants Loaded</h4>";
                     contestantHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                    contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
+                    contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Contestant Number</th></tr></thead>";
                     contestantHtml += "<tbody>";
                     data.contestants.forEach(c => {
-                        contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
+                        contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td></tr>`;
                     });
                     contestantHtml += "</tbody></table>";
                     contestantDisplay.innerHTML = contestantHtml;
