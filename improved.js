@@ -613,46 +613,67 @@ function loadFromStorage() {
 
 // DEMO DATA - Load all demo data from example.json using AJAX
 function loadAllDemo() {
+    console.log('Starting demo data load...');
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "example.json", true);
     
     xhr.onload = function() {
+        console.log('XHR loaded, status:', xhr.status);
         if (xhr.status === 200) {
             try {
+                console.log('Response text:', xhr.responseText.substring(0, 100));
                 const data = JSON.parse(xhr.responseText);
+                console.log('Parsed data:', data);
 
                 // Validate data structure
-                if (!data || !data.contestants || !data.judges || !data.categories || !data.scores) {
-                    alert("Invalid JSON structure. Missing required fields.");
+                if (!data) {
+                    alert("Data is null or undefined");
                     return;
                 }
+                
+                console.log('Contestants:', data.contestants);
+                console.log('Judges:', data.judges);
+                console.log('Categories:', data.categories);
 
                 // Load contestants
                 contestants = [];
                 contestantNames = {};
-                if (Array.isArray(data.contestants)) {
+                if (data.contestants && Array.isArray(data.contestants)) {
                     data.contestants.forEach(c => {
-                        contestants.push(c.number);
-                        contestantNames[c.number] = c.name;
+                        if (c && c.number !== undefined && c.name) {
+                            contestants.push(c.number);
+                            contestantNames[c.number] = c.name;
+                        }
                     });
+                } else {
+                    alert("Contestants array is missing or invalid");
+                    return;
                 }
 
                 // Load judges
                 judges = [];
-                if (Array.isArray(data.judges)) {
+                if (data.judges && Array.isArray(data.judges)) {
                     data.judges.forEach(j => {
                         judges.push(j);
                     });
+                } else {
+                    alert("Judges array is missing or invalid");
+                    return;
                 }
 
                 // Load categories
                 categories = [];
                 categoryNames = {};
-                if (Array.isArray(data.categories)) {
+                if (data.categories && Array.isArray(data.categories)) {
                     data.categories.forEach(cat => {
-                        categories.push(cat.name); // Use name instead of id
-                        categoryNames[cat.name] = cat.name; // Map name to name
+                        if (cat && cat.name) {
+                            categories.push(cat.name);
+                            categoryNames[cat.name] = cat.name;
+                        }
                     });
+                } else {
+                    alert("Categories array is missing or invalid");
+                    return;
                 }
 
                 // Clear existing scores
@@ -666,19 +687,25 @@ function loadAllDemo() {
                 });
 
                 // Load scores into scoresData structured by category
-                if (Array.isArray(data.scores)) {
+                if (data.scores && Array.isArray(data.scores)) {
                     data.scores.forEach(score => {
-                        // Use score.category directly (it has the name like "Evening Gown")
-                        if (!scoresData[score.category]) {
-                            scoresData[score.category] = [];
+                        if (score && score.category) {
+                            if (!scoresData[score.category]) {
+                                scoresData[score.category] = [];
+                            }
+                            scoresData[score.category].push({
+                                contestantNumber: score.contestant,
+                                judgeNumber: score.judge,
+                                score: score.score
+                            });
                         }
-                        scoresData[score.category].push({
-                            contestantNumber: score.contestant,
-                            judgeNumber: score.judge,
-                            score: score.score
-                        });
                     });
+                } else {
+                    alert("Scores array is missing or invalid");
+                    return;
                 }
+
+                console.log('Final scoresData:', scoresData);
 
                 // Save to localStorage
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
@@ -702,6 +729,8 @@ function loadAllDemo() {
 
             } catch (err) {
                 console.error("Error parsing JSON:", err);
+                console.error("Error message:", err.message);
+                console.error("Error stack:", err.stack);
                 alert("Could not parse demo JSON: " + err.message);
             }
         } else {
@@ -710,8 +739,8 @@ function loadAllDemo() {
         }
     };
 
-    xhr.onerror = function() {
-        console.error("XMLHttpRequest error occurred");
+    xhr.onerror = function(e) {
+        console.error("XMLHttpRequest error occurred:", e);
         alert("Network error when loading demo JSON. Make sure example.json exists in the same directory.");
     };
 
