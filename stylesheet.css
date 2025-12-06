@@ -868,6 +868,69 @@ footer p {
     background-color: #f9f9f9;
 }
 
+/* inline medal carousel styles */
+.carousel-inline-wrapper {
+    margin-top: 1rem;
+    text-align: center;
+}
+.carousel-inline-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.carousel-inline-items {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.carousel-slide-inline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    padding: 0.25rem;
+}
+.carousel-slide-inline.active {
+    transform: scale(1.05);
+}
+.medal-image-inline {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    display: block;
+}
+.winner-name-inline {
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    color: #000;
+    text-align: center;
+}
+.carousel-controls-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+.dots-container-inline {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+.dot-inline {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ccc;
+    display: inline-block;
+    cursor: pointer;
+}
+.dot-inline.active {
+    background: #000;
+}
+
 .carousel-slides {
     position: relative;
     width: 100%;

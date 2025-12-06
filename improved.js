@@ -401,14 +401,32 @@ function carouselShow(n) {
     const counter = document.getElementById('carouselCounter');
     
     if (slides.length === 0) return;
-    if (n >= slides.length) currentCarouselIndex = 0;
-    if (n < 0) currentCarouselIndex = slides.length - 1;
-    
+    // set requested index and clamp
+    currentCarouselIndex = parseInt(n, 10);
+    if (isNaN(currentCarouselIndex)) currentCarouselIndex = 0;
+    if (currentCarouselIndex >= slides.length) currentCarouselIndex = 0;
+    if (currentCarouselIndex < 0) currentCarouselIndex = slides.length - 1;
+
     slides.forEach(slide => slide.classList.remove('active'));
     slides[currentCarouselIndex].classList.add('active');
-    
+
+    // update counter
     if (counter) {
         counter.textContent = (currentCarouselIndex + 1) + ' / ' + slides.length;
+    }
+
+    // update inline medal active state (if present)
+    const inlineSlides = document.querySelectorAll('.carousel-slide-inline');
+    if (inlineSlides && inlineSlides.length > 0) {
+        inlineSlides.forEach(s => s.classList.remove('active'));
+        if (inlineSlides[currentCarouselIndex]) inlineSlides[currentCarouselIndex].classList.add('active');
+    }
+
+    // update inline dots
+    const inlineDots = document.querySelectorAll('.dot-inline');
+    if (inlineDots && inlineDots.length > 0) {
+        inlineDots.forEach(d => d.classList.remove('active'));
+        if (inlineDots[currentCarouselIndex]) inlineDots[currentCarouselIndex].classList.add('active');
     }
 }
 
@@ -561,26 +579,25 @@ function displayFinalScores(results) {
             inlineHtml += '<div class="carousel-inline-inner">';
             inlineHtml += '<div class="carousel-inline-items">';
 
-            // carousel slides - show 3rd, 2nd, then 1st
-            for (let i = 2; i >= 0; i--) {
-                if (i >= results.length) continue;
-            
-                const result = results[i];
-                const slideIndex = 2 - i; // 0, 1, 2
-                const isActive = slideIndex === 0 ? ' active' : '';
+            // build inline medal carousel for only the top 3 results (or fewer if not available)
+            const topCount = Math.min(3, results.length);
+
+            // display left-to-right: 1st, 2nd, 3rd so dots and carouselShow indices align
+            for (let pos = 0; pos < topCount; pos++) {
+                const result = results[pos];
+                const isActive = pos === 0 ? ' active' : '';
                 let medal = '';
 
-                // use web-friendly relative paths for medal images stored in the Photos folder
-                if (i === 2) {
-                    medal = 'Photos/3rd.png';
-                } else if (i === 1) {
-                    medal = 'Photos/2nd.png';
-                } else if (i === 0) {
+                if (pos === 0) {
                     medal = 'Photos/1st.png';
+                } else if (pos === 1) {
+                    medal = 'Photos/2nd.png';
+                } else if (pos === 2) {
+                    medal = 'Photos/3rd.png';
                 }
 
                 inlineHtml += '<div class="carousel-slide-inline' + isActive + '">';
-                inlineHtml += '<img src="' + medal + '" alt="Contestant" class="medal-image-inline">';
+                inlineHtml += '<img src="' + medal + '" alt="Contestant" class="medal-image-inline" onerror="this.style.display=\'none\';">';
                 inlineHtml += '<div class="winner-name-inline">Contestant #' + result.contestantNumber + '</div>';
                 inlineHtml += '</div>';
             }
@@ -589,8 +606,8 @@ function displayFinalScores(results) {
             inlineHtml += '<div class="carousel-controls-inline">';
             inlineHtml += '<button onclick="carouselPrev()">← Prev</button>';
             inlineHtml += '<div class="dots-container-inline">';
-        
-            for (let i = 0; i < Math.min(3, results.length); i++) {
+
+            for (let i = 0; i < topCount; i++) {
                 const dotActive = i === 0 ? ' active' : '';
                 inlineHtml += '<span class="dot-inline' + dotActive + '" onclick="carouselShow(' + i + ')"></span>';
             }
