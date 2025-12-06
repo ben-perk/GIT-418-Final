@@ -21,7 +21,7 @@ let dropOutliers = false;
 let currentCarouselIndex = 0;
 
 
-// demo data - Load all demo data (contestants, judges, categories, scores) from JSON file
+// demo data for the json requirements 
 function loadAllDemo() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "example.json", true);
@@ -109,7 +109,7 @@ function loadAllDemo() {
                 // Display categories
                 const categoryDisplay = document.getElementById("categoryInputsDisplay");
                 if (categoryDisplay) {
-                    let categoryHtml = "<h4>Demo Categories Loaded</h4>";
+                    let categoryHtml = "<h4>Demo Categories</h4>";
                     categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
                     categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
                     categoryHtml += "<tbody>";
