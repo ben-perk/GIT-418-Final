@@ -555,7 +555,56 @@ function displayFinalScores(results) {
             carouselSlides.innerHTML += slideHtml;
         }
         
-        // show carousel and update counter
+            // carousel slides - show 3rd, 2nd, then 1st (inline medal strip)
+            let inlineHtml = '';
+            inlineHtml += '<div class="carousel-inline-wrapper">';
+            inlineHtml += '<div class="carousel-inline-inner">';
+            inlineHtml += '<div class="carousel-inline-items">';
+
+            // carousel slides - show 3rd, 2nd, then 1st
+            for (let i = 2; i >= 0; i--) {
+                if (i >= results.length) continue;
+            
+                const result = results[i];
+                const slideIndex = 2 - i; // 0, 1, 2
+                const isActive = slideIndex === 0 ? ' active' : '';
+                let medal = '';
+
+                // use web-friendly relative paths for medal images stored in the Photos folder
+                if (i === 2) {
+                    medal = 'Photos/3rd.png';
+                } else if (i === 1) {
+                    medal = 'Photos/2nd.png';
+                } else if (i === 0) {
+                    medal = 'Photos/1st.png';
+                }
+
+                inlineHtml += '<div class="carousel-slide-inline' + isActive + '">';
+                inlineHtml += '<img src="' + medal + '" alt="Contestant" class="medal-image-inline">';
+                inlineHtml += '<div class="winner-name-inline">Contestant #' + result.contestantNumber + '</div>';
+                inlineHtml += '</div>';
+            }
+
+            inlineHtml += '</div>';
+            inlineHtml += '<div class="carousel-controls-inline">';
+            inlineHtml += '<button onclick="carouselPrev()">← Prev</button>';
+            inlineHtml += '<div class="dots-container-inline">';
+        
+            for (let i = 0; i < Math.min(3, results.length); i++) {
+                const dotActive = i === 0 ? ' active' : '';
+                inlineHtml += '<span class="dot-inline' + dotActive + '" onclick="carouselShow(' + i + ')"></span>';
+            }
+        
+            inlineHtml += '</div>';
+            inlineHtml += '<button onclick="carouselNext()">Next →</button>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            // append the inline medal carousel to the slides container
+            carouselSlides.innerHTML += inlineHtml;
+
+            // show carousel and update counter
         carouselContainer.style.display = 'block';
         const counter = document.getElementById('carouselCounter');
         if (counter) {
