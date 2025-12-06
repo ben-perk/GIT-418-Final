@@ -73,49 +73,16 @@ function loadAllDemo() {
                 localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
                 localStorage.setItem("pageantScores", JSON.stringify(scoresData));
 
-                // Display contestants
-                const contestantDisplay = document.getElementById("contestantListDisplay");
-                if (contestantDisplay) {
-                    let contestantHtml = "<h4>Demo Contestants Loaded</h4>";
-                    contestantHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                    contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Contestant Number</th></tr></thead>";
-                    contestantHtml += "<tbody>";
-                    data.contestants.forEach(c => {
-                        contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td></tr>`;
-                    });
-                    contestantHtml += "</tbody></table>";
-                    contestantDisplay.innerHTML = contestantHtml;
+              
                 }
 
-                // Display judges
-                const judgeDisplay = document.getElementById("judgeListDisplay");
-                if (judgeDisplay) {
-                    let judgeHtml = "<h4>Demo Judges Loaded</h4>";
-                    judgeHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                    judgeHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
-                    judgeHtml += "<tbody>";
-                    data.judges.forEach(j => {
-                        judgeHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
-                    });
-                    judgeHtml += "</tbody></table>";
-                    judgeDisplay.innerHTML = judgeHtml;
+
                 }
 
-                // Display categories (without Category ID column)
-                const categoryDisplay = document.getElementById("categoryInputsDisplay");
-                if (categoryDisplay) {
-                    let categoryHtml = "<h4>Demo Categories Loaded</h4>";
-                    categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                    categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
-                    categoryHtml += "<tbody>";
-                    data.categories.forEach(cat => {
-                        categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
-                    });
-                    categoryHtml += "</tbody></table>";
-                    categoryDisplay.innerHTML = categoryHtml;
-                }
+                // Calculate final scores automatically
+                calculateFinalScores();
 
-                alert("Demo data loaded!");
+                alert("Demo data loaded and scores calculated!");
             } catch (err) {
                 console.error("Error parsing JSON:", err);
                 alert("Could not parse demo JSON.");
