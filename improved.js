@@ -30,6 +30,7 @@ function loadAllDemo() {
         if (xhr.status === 200) {
             try {
                 const data = JSON.parse(xhr.responseText);
+                console.log("JSON data loaded:", data);
 
                 // Load contestants
                 contestants = [];
@@ -40,6 +41,7 @@ function loadAllDemo() {
                 });
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
                 localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+                console.log("Contestants loaded:", contestants);
 
                 // Load judges
                 judges = [];
@@ -47,6 +49,7 @@ function loadAllDemo() {
                     judges.push(j);
                 });
                 localStorage.setItem("pageantJudges", JSON.stringify(judges));
+                console.log("Judges loaded:", judges);
 
                 // Load categories
                 categories = [];
@@ -57,6 +60,7 @@ function loadAllDemo() {
                 });
                 localStorage.setItem("pageantCategories", JSON.stringify(categories));
                 localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
+                console.log("Categories loaded:", categories, categoryNames);
 
                 // Load scores
                 for (const score of data.scores) {
@@ -70,39 +74,52 @@ function loadAllDemo() {
                     });
                 }
                 localStorage.setItem("pageantScores", JSON.stringify(scoresData));
+                console.log("Scores loaded:", scoresData);
 
                 // Display contestants
-                let contestantHtml = "<h4>Demo Contestants Loaded</h4>";
-                contestantHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
-                contestantHtml += "<tbody>";
-                data.contestants.forEach(c => {
-                    contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
-                });
-                contestantHtml += "</tbody></table>";
-                document.getElementById("contestantListDisplay").innerHTML = contestantHtml;
+                const contestantDisplay = document.getElementById("contestantListDisplay");
+                if (contestantDisplay) {
+                    let contestantHtml = "<h4>Demo Contestants Loaded</h4>";
+                    contestantHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                    contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
+                    contestantHtml += "<tbody>";
+                    data.contestants.forEach(c => {
+                        contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
+                    });
+                    contestantHtml += "</tbody></table>";
+                    contestantDisplay.innerHTML = contestantHtml;
+                    console.log("Contestants displayed");
+                }
 
                 // Display judges
-                let judgeHtml = "<h4>Demo Judges Loaded</h4>";
-                judgeHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                judgeHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
-                judgeHtml += "<tbody>";
-                data.judges.forEach(j => {
-                    judgeHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
-                });
-                judgeHtml += "</tbody></table>";
-                document.getElementById("judgeListDisplay").innerHTML = judgeHtml;
+                const judgeDisplay = document.getElementById("judgeListDisplay");
+                if (judgeDisplay) {
+                    let judgeHtml = "<h4>Demo Judges Loaded</h4>";
+                    judgeHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                    judgeHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
+                    judgeHtml += "<tbody>";
+                    data.judges.forEach(j => {
+                        judgeHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
+                    });
+                    judgeHtml += "</tbody></table>";
+                    judgeDisplay.innerHTML = judgeHtml;
+                    console.log("Judges displayed");
+                }
 
                 // Display categories
-                let categoryHtml = "<h4>Demo Categories Loaded</h4>";
-                categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
-                categoryHtml += "<tbody>";
-                data.categories.forEach(cat => {
-                    categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
-                });
-                categoryHtml += "</tbody></table>";
-                document.getElementById("categoryInputsDisplay").innerHTML = categoryHtml;
+                const categoryDisplay = document.getElementById("categoryInputsDisplay");
+                if (categoryDisplay) {
+                    let categoryHtml = "<h4>Demo Categories Loaded</h4>";
+                    categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                    categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
+                    categoryHtml += "<tbody>";
+                    data.categories.forEach(cat => {
+                        categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
+                    });
+                    categoryHtml += "</tbody></table>";
+                    categoryDisplay.innerHTML = categoryHtml;
+                    console.log("Categories displayed");
+                }
 
                 alert("All demo data loaded successfully!");
             } catch (err) {
