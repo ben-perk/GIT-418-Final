@@ -1,6 +1,6 @@
 "use strict";
 
-// Store contestant numbers and names, maybe not names but just in case
+// Store contestant numbers and names
 let contestants = [];
 let contestantNames = {};
 
@@ -20,8 +20,7 @@ let dropOutliers = false;
 // Carousel variables for winners
 let currentCarouselIndex = 0;
 
-
-// demo data for the json requirements 
+// DEMO DATA - Load all demo data from example.json using AJAX
 function loadAllDemo() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "example.json", true);
@@ -53,17 +52,24 @@ function loadAllDemo() {
                     categoryNames[cat.id] = cat.name;
                 });
 
-                // Load scores
-                for (const score of data.scores) {
-                    const key = `${score.contestant}-${score.category}`;
-                    if (!scoresData[key]) {
-                        scoresData[key] = [];
-                    }
-                    scoresData[key].push({
-                        judge: score.judge,
+                // Clear existing scores
+                for (const key in scoresData) {
+                    delete scoresData[key];
+                }
+
+                // Initialize category arrays in scoresData
+                categories.forEach(cat => {
+                    scoresData[cat] = [];
+                });
+
+                // Load scores into scoresData structured by category
+                data.scores.forEach(score => {
+                    scoresData[score.category].push({
+                        contestantNumber: score.contestant,
+                        judgeNumber: score.judge,
                         score: score.score
                     });
-                }
+                });
 
                 // Save to localStorage
                 localStorage.setItem("pageantContestants", JSON.stringify(contestants));
@@ -73,23 +79,25 @@ function loadAllDemo() {
                 localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
                 localStorage.setItem("pageantScores", JSON.stringify(scoresData));
 
-              
-                }
-
-
-                }
+                // Update displays
+                updateContestantDisplay();
+                updateJudgeDisplay();
+                updateCategoryDisplay();
+                generateScoreTables();
 
                 // Calculate final scores automatically
-                calculateFinalScores();
+                setTimeout(() => {
+                    calculateFinalScores();
+                    alert("Demo data loaded successfully! Scores have been calculated.");
+                }, 300);
 
-                alert("Demo data loaded and scores calculated!");
             } catch (err) {
                 console.error("Error parsing JSON:", err);
-                alert("Could not parse demo JSON.");
+                alert("Could not parse demo JSON. Check console for details.");
             }
         } else {
             console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file.");
+            alert("Could not load demo JSON file. Make sure example.json exists in the same directory.");
         }
     };
 
@@ -101,152 +109,53 @@ function loadAllDemo() {
     xhr.send();
 }
 
-// demo data - Load judges from JSON file using AJAX/XMLHttpRequest
-function loadDemoJudges() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "example.json", true);
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            try {
-                const data = JSON.parse(xhr.responseText);
-
-                judges = [];
-                data.judges.forEach(j => {
-                    judges.push(j);
-                });
-
-                // Update display with table format
-                const display = document.getElementById("judgeListDisplay");
-                let html = "<h4>Demo Judges Loaded</h4>";
-                html += "<table style='border-collapse: collapse; width: 100%;'>";
-                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
-                html += "<tbody>";
-                data.judges.forEach(j => {
-                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
-                });
-                html += "</tbody></table>";
-                display.innerHTML = html;
-
-                // Save stored values
-                localStorage.setItem("pageantJudges", JSON.stringify(judges));
-
-                alert("Demo judges loaded!");
-            } catch (err) {
-                console.error("Error parsing JSON:", err);
-                alert("Could not parse demo JSON.");
-            }
-        } else {
-            console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file.");
-        }
-    };
-
-    xhr.onerror = function() {
-        console.error("XMLHttpRequest error occurred");
-        alert("Network error when loading demo JSON.");
-    };
-
-    xhr.send();
+// Helper function to update contestant display
+function updateContestantDisplay() {
+    const display = document.getElementById('contestantListDisplay');
+    if (display) {
+        let html = '<h4>Demo Contestants Loaded</h4>';
+        html += '<table class="demo-table">';
+        html += '<thead><tr><th>Contestant #</th><th>Name</th></tr></thead>';
+        html += '<tbody>';
+        contestants.forEach(c => {
+            html += `<tr><td><strong>${c}</strong></td><td>${contestantNames[c]}</td></tr>`;
+        });
+        html += '</tbody></table>';
+        display.innerHTML = html;
+    }
 }
 
-// demo data - Load categories from JSON file using AJAX/XMLHttpRequest
-function loadDemoCategories() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "example.json", true);
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            try {
-                const data = JSON.parse(xhr.responseText);
-
-                categories = [];
-                categoryNames = {};
-
-                data.categories.forEach(cat => {
-                    categories.push(cat.id);
-                    categoryNames[cat.id] = cat.name;
-                });
-
-                // Update display with table format
-                const display = document.getElementById("categoryInputsDisplay");
-                let html = "<h4>Demo Categories Loaded</h4>";
-                html += "<table style='border-collapse: collapse; width: 100%;'>";
-                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
-                html += "<tbody>";
-                data.categories.forEach(cat => {
-                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
-                });
-                html += "</tbody></table>";
-                display.innerHTML = html;
-
-                // Save stored values
-                localStorage.setItem("pageantCategories", JSON.stringify(categories));
-                localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
-
-                alert("Demo categories loaded!");
-            } catch (err) {
-                console.error("Error parsing JSON:", err);
-                alert("Could not parse demo JSON.");
-            }
-        } else {
-            console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file.");
-        }
-    };
-
-    xhr.onerror = function() {
-        console.error("XMLHttpRequest error occurred");
-        alert("Network error when loading demo JSON.");
-    };
-
-    xhr.send();
+// Helper function to update judge display
+function updateJudgeDisplay() {
+    const display = document.getElementById('judgeListDisplay');
+    if (display) {
+        let html = '<h4>Demo Judges Loaded</h4>';
+        html += '<table class="demo-table">';
+        html += '<thead><tr><th>Judge Number</th></tr></thead>';
+        html += '<tbody>';
+        judges.forEach(j => {
+            html += `<tr><td><strong>Judge #${j}</strong></td></tr>`;
+        });
+        html += '</tbody></table>';
+        display.innerHTML = html;
+    }
 }
 
-// demo data - Load scores from JSON file and populate score tables using AJAX/XMLHttpRequest
-function loadDemoScores() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "example.json", true);
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            try {
-                const data = JSON.parse(xhr.responseText);
-
-                // Initialize scoresData object
-                for (const score of data.scores) {
-                    const key = `${score.contestant}-${score.category}`;
-                    if (!scoresData[key]) {
-                        scoresData[key] = [];
-                    }
-                    scoresData[key].push({
-                        judge: score.judge,
-                        score: score.score
-                    });
-                }
-
-                // Save to localStorage
-                localStorage.setItem("pageantScores", JSON.stringify(scoresData));
-
-                alert("Demo scores loaded!");
-            } catch (err) {
-                console.error("Error parsing JSON:", err);
-                alert("Could not parse demo JSON.");
-            }
-        } else {
-            console.error("Error loading file. Status:", xhr.status);
-            alert("Could not load demo JSON file.");
-        }
-    };
-
-    xhr.onerror = function() {
-        console.error("XMLHttpRequest error occurred");
-        alert("Network error when loading demo JSON.");
-    };
-
-    xhr.send();
+// Helper function to update category display
+function updateCategoryDisplay() {
+    const display = document.getElementById('categoryInputsDisplay');
+    if (display) {
+        let html = '<h4>Demo Categories Loaded</h4>';
+        html += '<table class="demo-table">';
+        html += '<thead><tr><th>Category ID</th><th>Category Name</th></tr></thead>';
+        html += '<tbody>';
+        categories.forEach(c => {
+            html += `<tr><td>${c}</td><td>${categoryNames[c]}</td></tr>`;
+        });
+        html += '</tbody></table>';
+        display.innerHTML = html;
+    }
 }
-
 
 //  Save and Load Functions
 
@@ -279,9 +188,6 @@ function loadFromStorage() {
         const storedCategoryNames = localStorage.getItem('pageantCategoryNames');
         if (storedCategoryNames) {
             categoryNames = JSON.parse(storedCategoryNames);
-        }
-        for (let i = 0; i < categories.length; i++) {
-            scoresData[categories[i]] = [];
         }
     }
 
@@ -346,6 +252,7 @@ function setupContestants() {
     localStorage.setItem('pageantContestants', JSON.stringify(contestants));
     console.log('Saved to localStorage');
 }
+
 //category
 function setupCategories() {
     console.log('setupCategories called');
@@ -395,6 +302,7 @@ function setupCategories() {
     localStorage.setItem('pageantCategories', JSON.stringify(categories));
     localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
 }
+
 //names of categories
 function saveCategoryNames() {
     for (let i = 0; i < categories.length; i++) {
@@ -414,6 +322,7 @@ function saveCategoryNames() {
     localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
     alert('Category names saved!');
 }
+
 //judges
 function setupJudges() {
     console.log('setupJudges called');
@@ -509,8 +418,18 @@ function generateScoreTables() {
             for (let j = 0; j < judges.length; j++) {
                 const judgeNum = judges[j];
                 const inputId = 'score_' + category + '_' + contestantNum + '_' + judgeNum;
+                
+                // Check if score already exists in scoresData
+                let existingScore = '';
+                if (scoresData[category]) {
+                    const found = scoresData[category].find(s => s.contestantNumber === contestantNum && s.judgeNumber === judgeNum);
+                    if (found) {
+                        existingScore = found.score;
+                    }
+                }
+                
                 html += '<td>';
-                html += '<input type="number" id="' + inputId + '" class="form-control" min="1" max="1000" value="">';
+                html += '<input type="number" id="' + inputId + '" class="form-control" min="1" max="1000" value="' + existingScore + '">';
                 html += '</td>';
             }
 
@@ -567,6 +486,7 @@ function toggleOutliers() {
         toggle.checked = dropOutliers;
     }
 }
+
 //clear
 function clearAllData() {
     if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
@@ -601,6 +521,7 @@ function clearAllData() {
         alert('All data has been cleared!');
     }
 }
+
 //export make it look better later
 function exportToCSV() {
     if (Object.keys(scoresData).length === 0) {
@@ -701,10 +622,12 @@ function calculateFinalScores() {
 
     for (let c = 0; c < categories.length; c++) {
         const category = categories[c];
-        for (let i = 0; i < scoresData[category].length; i++) {
-            const item = scoresData[category][i];
-            if (contestantScores[item.contestantNumber]) {
-                contestantScores[item.contestantNumber][category].push(item.score);
+        if (scoresData[category]) {
+            for (let i = 0; i < scoresData[category].length; i++) {
+                const item = scoresData[category][i];
+                if (contestantScores[item.contestantNumber]) {
+                    contestantScores[item.contestantNumber][category].push(item.score);
+                }
             }
         }
     }
@@ -884,7 +807,7 @@ function displayFinalScores(results) {
         html += '<h5>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h5>';
       
         //category winners table
-        html += '<h6>Category Winners:</h6>';
+        html += '<h6>Category Breakdown:</h6>';
         html += '<table class="table-sm">';
         html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
         html += '<tbody>';
@@ -920,7 +843,8 @@ function displayFinalScores(results) {
     }
 
     html += '</div>';
-//check if a judge was being shady
+
+    //check if a judge was being shady
     html += '<div class="card border-info">';
     html += '<div class="card-header">Judge Overall Averages Per Contestant</div>';
     html += '<table class="table-sm">';
@@ -940,13 +864,15 @@ function displayFinalScores(results) {
         const judgeAverages = {};
         for (let c = 0; c < categories.length; c++) {
             const category = categories[c];
-            for (let s = 0; s < scoresData[category].length; s++) {
-                const scoreItem = scoresData[category][s];
-                if (scoreItem.contestantNumber == result.contestantNumber) {
-                    if (!judgeAverages[scoreItem.judgeNumber]) {
-                        judgeAverages[scoreItem.judgeNumber] = [];
+            if (scoresData[category]) {
+                for (let s = 0; s < scoresData[category].length; s++) {
+                    const scoreItem = scoresData[category][s];
+                    if (scoreItem.contestantNumber == result.contestantNumber) {
+                        if (!judgeAverages[scoreItem.judgeNumber]) {
+                            judgeAverages[scoreItem.judgeNumber] = [];
+                        }
+                        judgeAverages[scoreItem.judgeNumber].push(scoreItem.score);
                     }
-                    judgeAverages[scoreItem.judgeNumber].push(scoreItem.score);
                 }
             }
         }
@@ -984,7 +910,7 @@ function displayFinalScores(results) {
     display.innerHTML = html;
 }
 
-// accordian
+// Accordion
 
 $(document).ready(function() {
     $("#accordion").accordion({
@@ -993,10 +919,11 @@ $(document).ready(function() {
     });
 });
 
-//load the stored date from last time
+// Load stored data from last time
 
 loadFromStorage();
 
+// Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('createContestantBtn').addEventListener('click', setupContestants);
     document.getElementById('createCategoryBtn').addEventListener('click', setupCategories);

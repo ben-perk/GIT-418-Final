@@ -814,3 +814,81 @@ footer p {
         padding: 1rem;
     }
 }
+
+/* Demo Table Styles */
+.demo-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.demo-table thead tr {
+    background-color: #f0f0f0;
+}
+
+.demo-table th,
+.demo-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.demo-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Button Styles */
+.btn-custom {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-custom:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.btn-margin-top {
+    margin-top: 1rem;
+}
+
+.btn-margin-left {
+    margin-left: 0.5rem;
+}
+
+/* Input and Label Styles */
+.form-label {
+    display: block;
+    color: #000;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #000;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Display Sections */
+.display-section {
+    margin-top: 1.5rem;
+}
+
+.content-box {
+    background: #fff;
+    border: 2px solid #000;
+    padding: 1.5rem;
+}
+
+.button-container {
+    margin-bottom: 1.5rem;
+}

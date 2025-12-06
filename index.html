@@ -45,8 +45,8 @@
                 </div>
             </section>
 
-            <div class="mb-3">
-                <button class="btn btn-info mt-2" id="loadDemoBtn">Demo Data</button>
+            <div class="button-container">
+                <button class="btn-custom btn-margin-top" id="loadDemoBtn">Demo Data</button>
             </div>
 
             <!-- Setup Accordion -->
@@ -56,36 +56,36 @@
                     <h3>Contestant Setup</h3>
                     <div id="contestants">
                         <p>Enter the number of contestants competing in this pageant.</p>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label for="numContestants" class="form-label">Number of Contestants:</label>
-                            <input type="number" id="numContestants" class="form-control" min="1" placeholder="Enter number">
+                            <input type="number" id="numContestants" class="form-input" min="1" placeholder="Enter number">
                         </div>
-                        <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
-                        <div id="contestantListDisplay" class="mt-3"></div>
+                        <button class="btn-custom" id="createContestantBtn">Create Contestant List</button>
+                        <div id="contestantListDisplay" class="display-section"></div>
                     </div>
 
                     <!-- Category Setup -->
                     <h3>Category Setup</h3>
                     <div id="categories">
                         <p>Enter the number of categories and their names.</p>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label for="numCategories" class="form-label">Number of Categories:</label>
-                            <input type="number" id="numCategories" class="form-control" min="1" placeholder="Enter number">
+                            <input type="number" id="numCategories" class="form-input" min="1" placeholder="Enter number">
                         </div>
-                        <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
-                        <div id="categoryInputsDisplay" class="mt-3"></div>
+                        <button class="btn-custom" id="createCategoryBtn">Create Category List</button>
+                        <div id="categoryInputsDisplay" class="display-section"></div>
                     </div>
 
                     <!-- Judge Setup -->
                     <h3>Judge Setup</h3>
                     <div id="Judges">
                         <p>Enter the number of judges for this pageant.</p>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label for="numJudges" class="form-label">Number of Judges:</label>
-                            <input type="number" id="numJudges" class="form-control" min="1" placeholder="Enter number">
+                            <input type="number" id="numJudges" class="form-input" min="1" placeholder="Enter number">
                         </div>
-                        <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
-                        <div id="judgeListDisplay" class="mt-3"></div>
+                        <button class="btn-custom" id="createJudgeBtn">Create Judge List</button>
+                        <div id="judgeListDisplay" class="display-section"></div>
                     </div>
                 </div>
             </section>
@@ -100,18 +100,18 @@
 
             <!-- Final Scores Section -->
             <section id="scores" class="mb-4">
-                <div class="p-3 bg-white rounded border">
+                <div class="content-box">
                     <h2>Final Scores</h2>
-                    <div class="mb-3">
-                        <label for="outlierToggle" class="form-check-label">
-                            <input type="checkbox" id="outlierToggle" class="form-check-input">
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; font-weight: normal; color: #000; gap: 0.5rem;">
+                            <input type="checkbox" id="outlierToggle" style="width: auto; margin: 0; cursor: pointer;">
                             Remove Highest and Lowest Scores of each Category
                         </label>
                     </div>
-                    <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
-                    <button class="btn btn-primary" id="exportBtn">Export Scores to CSV</button>
-                    <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
-                    <div id="finalScoresDisplay" class="mt-3"></div>
+                    <button class="btn-custom" id="calculateBtn">Calculate Final Scores</button>
+                    <button class="btn-custom btn-margin-left" id="exportBtn">Export Scores to CSV</button>
+                    <button class="btn-custom btn-margin-left" id="clearBtn">Clear All Data</button>
+                    <div id="finalScoresDisplay" class="display-section"></div>
                 </div>
             </section>
         </div>
@@ -125,7 +125,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
 
-    <!-- Main  Script -->
+    <!-- Main Script -->
     <script defer src="improved.js"></script>
 </body>
 </html>
