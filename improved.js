@@ -21,39 +21,54 @@ let dropOutliers = false;
 let currentCarouselIndex = 0;
 
 
-// demo data
-async function loadDemoContestants() {
-    try {
-        const response = await fetch("example.json");
-        const data = await response.json();
+// demo data - Load contestants from JSON file using AJAX/XMLHttpRequest
+function loadDemoContestants() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "example.json", true);
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
 
-        contestants = [];
-        contestantNames = {};
+                contestants = [];
+                contestantNames = {};
 
-        data.contestants.forEach(c => {
-            contestants.push(c.number);
-            contestantNames[c.number] = c.name;
-        });
+                data.contestants.forEach(c => {
+                    contestants.push(c.number);
+                    contestantNames[c.number] = c.name;
+                });
 
-        // Update display
-        const display = document.getElementById("contestantListDisplay");
-        let html = "<h4>Demo Contestants Loaded</h4><ul>";
-        data.contestants.forEach(c => {
-            html += `<li><strong>#${c.number}</strong> — ${c.name}</li>`;
-        });
-        html += "</ul>";
-        display.innerHTML = html;
+                // Update display
+                const display = document.getElementById("contestantListDisplay");
+                let html = "<h4>Demo Contestants Loaded</h4><ul>";
+                data.contestants.forEach(c => {
+                    html += `<li><strong>#${c.number}</strong> — ${c.name}</li>`;
+                });
+                html += "</ul>";
+                display.innerHTML = html;
 
-        // Save stored values
-        localStorage.setItem("pageantContestants", JSON.stringify(contestants));
-        localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+                // Save stored values
+                localStorage.setItem("pageantContestants", JSON.stringify(contestants));
+                localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
 
-        alert("Demo contestants loaded!");
+                alert("Demo contestants loaded!");
+            } catch (err) {
+                console.error("Error parsing JSON:", err);
+                alert("Could not parse demo JSON.");
+            }
+        } else {
+            console.error("Error loading file. Status:", xhr.status);
+            alert("Could not load demo JSON file.");
+        }
+    };
 
-    } catch (err) {
-        console.error("Error loading demo contestants JSON:", err);
-        alert("Could not load demo JSON.");
-    }
+    xhr.onerror = function() {
+        console.error("XMLHttpRequest error occurred");
+        alert("Network error when loading demo JSON.");
+    };
+
+    xhr.send();
 }
 
 
