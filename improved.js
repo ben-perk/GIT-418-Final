@@ -30,7 +30,6 @@ function loadAllDemo() {
         if (xhr.status === 200) {
             try {
                 const data = JSON.parse(xhr.responseText);
-                console.log("JSON data loaded:", data);
 
                 // Load contestants
                 contestants = [];
@@ -39,17 +38,12 @@ function loadAllDemo() {
                     contestants.push(c.number);
                     contestantNames[c.number] = c.name;
                 });
-                localStorage.setItem("pageantContestants", JSON.stringify(contestants));
-                localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
-                console.log("Contestants loaded:", contestants);
 
                 // Load judges
                 judges = [];
                 data.judges.forEach(j => {
                     judges.push(j);
                 });
-                localStorage.setItem("pageantJudges", JSON.stringify(judges));
-                console.log("Judges loaded:", judges);
 
                 // Load categories
                 categories = [];
@@ -58,9 +52,6 @@ function loadAllDemo() {
                     categories.push(cat.id);
                     categoryNames[cat.id] = cat.name;
                 });
-                localStorage.setItem("pageantCategories", JSON.stringify(categories));
-                localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
-                console.log("Categories loaded:", categories, categoryNames);
 
                 // Load scores
                 for (const score of data.scores) {
@@ -73,8 +64,6 @@ function loadAllDemo() {
                         score: score.score
                     });
                 }
-                localStorage.setItem("pageantScores", JSON.stringify(scoresData));
-                console.log("Scores loaded:", scoresData);
 
                 // Display contestants
                 const contestantDisplay = document.getElementById("contestantListDisplay");
@@ -88,7 +77,6 @@ function loadAllDemo() {
                     });
                     contestantHtml += "</tbody></table>";
                     contestantDisplay.innerHTML = contestantHtml;
-                    console.log("Contestants displayed");
                 }
 
                 // Display judges
@@ -103,38 +91,23 @@ function loadAllDemo() {
                     });
                     judgeHtml += "</tbody></table>";
                     judgeDisplay.innerHTML = judgeHtml;
-                    console.log("Judges displayed");
                 }
 
-                // Display categories
+                // Display categories (without Category ID column)
                 const categoryDisplay = document.getElementById("categoryInputsDisplay");
                 if (categoryDisplay) {
-                    let categoryHtml = "<h4>Demo Categories</h4>";
+                    let categoryHtml = "<h4>Demo Categories Loaded</h4>";
                     categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
-                    categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
+                    categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
                     categoryHtml += "<tbody>";
                     data.categories.forEach(cat => {
-                        categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
+                        categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
                     });
                     categoryHtml += "</tbody></table>";
                     categoryDisplay.innerHTML = categoryHtml;
-                    console.log("Categories displayed");
                 }
 
-                // Generate score tables
-                generateScoreTables();
-
-                // Populate score input fields with demo data
-                for (const score of data.scores) {
-                    const inputId = `score-${score.contestant}-${score.judge}-${score.category}`;
-                    const scoreInput = document.getElementById(inputId);
-                    if (scoreInput) {
-                        scoreInput.value = score.score;
-                    }
-                }
-                console.log("Score inputs populated");
-
-                alert("All demo data loaded successfully!");
+                alert("Demo data loaded!");
             } catch (err) {
                 console.error("Error parsing JSON:", err);
                 alert("Could not parse demo JSON.");
