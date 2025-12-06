@@ -21,8 +21,8 @@ let dropOutliers = false;
 let currentCarouselIndex = 0;
 
 
-// demo data - Load contestants from JSON file using AJAX/XMLHttpRequest
-function loadDemoContestants() {
+// demo data - Load all demo data (contestants, judges, categories, scores) from JSON file
+function loadAllDemo() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "example.json", true);
     
@@ -31,31 +31,226 @@ function loadDemoContestants() {
             try {
                 const data = JSON.parse(xhr.responseText);
 
+                // Load contestants
                 contestants = [];
                 contestantNames = {};
-
                 data.contestants.forEach(c => {
                     contestants.push(c.number);
                     contestantNames[c.number] = c.name;
                 });
+                localStorage.setItem("pageantContestants", JSON.stringify(contestants));
+                localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+
+                // Load judges
+                judges = [];
+                data.judges.forEach(j => {
+                    judges.push(j);
+                });
+                localStorage.setItem("pageantJudges", JSON.stringify(judges));
+
+                // Load categories
+                categories = [];
+                categoryNames = {};
+                data.categories.forEach(cat => {
+                    categories.push(cat.id);
+                    categoryNames[cat.id] = cat.name;
+                });
+                localStorage.setItem("pageantCategories", JSON.stringify(categories));
+                localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
+
+                // Load scores
+                for (const score of data.scores) {
+                    const key = `${score.contestant}-${score.category}`;
+                    if (!scoresData[key]) {
+                        scoresData[key] = [];
+                    }
+                    scoresData[key].push({
+                        judge: score.judge,
+                        score: score.score
+                    });
+                }
+                localStorage.setItem("pageantScores", JSON.stringify(scoresData));
+
+                // Display contestants
+                let contestantHtml = "<h4>Demo Contestants Loaded</h4>";
+                contestantHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                contestantHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
+                contestantHtml += "<tbody>";
+                data.contestants.forEach(c => {
+                    contestantHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
+                });
+                contestantHtml += "</tbody></table>";
+                document.getElementById("contestantListDisplay").innerHTML = contestantHtml;
+
+                // Display judges
+                let judgeHtml = "<h4>Demo Judges Loaded</h4>";
+                judgeHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                judgeHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
+                judgeHtml += "<tbody>";
+                data.judges.forEach(j => {
+                    judgeHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
+                });
+                judgeHtml += "</tbody></table>";
+                document.getElementById("judgeListDisplay").innerHTML = judgeHtml;
+
+                // Display categories
+                let categoryHtml = "<h4>Demo Categories Loaded</h4>";
+                categoryHtml += "<table style='border-collapse: collapse; width: 100%;'>";
+                categoryHtml += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
+                categoryHtml += "<tbody>";
+                data.categories.forEach(cat => {
+                    categoryHtml += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
+                });
+                categoryHtml += "</tbody></table>";
+                document.getElementById("categoryInputsDisplay").innerHTML = categoryHtml;
+
+                alert("All demo data loaded successfully!");
+            } catch (err) {
+                console.error("Error parsing JSON:", err);
+                alert("Could not parse demo JSON.");
+            }
+        } else {
+            console.error("Error loading file. Status:", xhr.status);
+            alert("Could not load demo JSON file.");
+        }
+    };
+
+    xhr.onerror = function() {
+        console.error("XMLHttpRequest error occurred");
+        alert("Network error when loading demo JSON.");
+    };
+
+    xhr.send();
+}
+
+// demo data - Load judges from JSON file using AJAX/XMLHttpRequest
+function loadDemoJudges() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "example.json", true);
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+
+                judges = [];
+                data.judges.forEach(j => {
+                    judges.push(j);
+                });
 
                 // Update display with table format
-                const display = document.getElementById("contestantListDisplay");
-                let html = "<h4>Demo Contestants Loaded</h4>";
+                const display = document.getElementById("judgeListDisplay");
+                let html = "<h4>Demo Judges Loaded</h4>";
                 html += "<table style='border-collapse: collapse; width: 100%;'>";
-                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Number</th><th style='border: 1px solid #ddd; padding: 8px;'>Name</th></tr></thead>";
+                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Judge Number</th></tr></thead>";
                 html += "<tbody>";
-                data.contestants.forEach(c => {
-                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>#${c.number}</strong></td><td style='border: 1px solid #ddd; padding: 8px;'>${c.name}</td></tr>`;
+                data.judges.forEach(j => {
+                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'><strong>Judge #${j}</strong></td></tr>`;
                 });
                 html += "</tbody></table>";
                 display.innerHTML = html;
 
                 // Save stored values
-                localStorage.setItem("pageantContestants", JSON.stringify(contestants));
-                localStorage.setItem("pageantContestantNames", JSON.stringify(contestantNames));
+                localStorage.setItem("pageantJudges", JSON.stringify(judges));
 
-                alert("Demo contestants loaded!");
+                alert("Demo judges loaded!");
+            } catch (err) {
+                console.error("Error parsing JSON:", err);
+                alert("Could not parse demo JSON.");
+            }
+        } else {
+            console.error("Error loading file. Status:", xhr.status);
+            alert("Could not load demo JSON file.");
+        }
+    };
+
+    xhr.onerror = function() {
+        console.error("XMLHttpRequest error occurred");
+        alert("Network error when loading demo JSON.");
+    };
+
+    xhr.send();
+}
+
+// demo data - Load categories from JSON file using AJAX/XMLHttpRequest
+function loadDemoCategories() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "example.json", true);
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+
+                categories = [];
+                categoryNames = {};
+
+                data.categories.forEach(cat => {
+                    categories.push(cat.id);
+                    categoryNames[cat.id] = cat.name;
+                });
+
+                // Update display with table format
+                const display = document.getElementById("categoryInputsDisplay");
+                let html = "<h4>Demo Categories Loaded</h4>";
+                html += "<table style='border-collapse: collapse; width: 100%;'>";
+                html += "<thead><tr style='background-color: #f0f0f0;'><th style='border: 1px solid #ddd; padding: 8px;'>Category ID</th><th style='border: 1px solid #ddd; padding: 8px;'>Category Name</th></tr></thead>";
+                html += "<tbody>";
+                data.categories.forEach(cat => {
+                    html += `<tr><td style='border: 1px solid #ddd; padding: 8px;'>${cat.id}</td><td style='border: 1px solid #ddd; padding: 8px;'>${cat.name}</td></tr>`;
+                });
+                html += "</tbody></table>";
+                display.innerHTML = html;
+
+                // Save stored values
+                localStorage.setItem("pageantCategories", JSON.stringify(categories));
+                localStorage.setItem("pageantCategoryNames", JSON.stringify(categoryNames));
+
+                alert("Demo categories loaded!");
+            } catch (err) {
+                console.error("Error parsing JSON:", err);
+                alert("Could not parse demo JSON.");
+            }
+        } else {
+            console.error("Error loading file. Status:", xhr.status);
+            alert("Could not load demo JSON file.");
+        }
+    };
+
+    xhr.onerror = function() {
+        console.error("XMLHttpRequest error occurred");
+        alert("Network error when loading demo JSON.");
+    };
+
+    xhr.send();
+}
+
+// demo data - Load scores from JSON file and populate score tables using AJAX/XMLHttpRequest
+function loadDemoScores() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "example.json", true);
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+
+                // Initialize scoresData object
+                for (const score of data.scores) {
+                    const key = `${score.contestant}-${score.category}`;
+                    if (!scoresData[key]) {
+                        scoresData[key] = [];
+                    }
+                    scoresData[key].push({
+                        judge: score.judge,
+                        score: score.score
+                    });
+                }
+
+                // Save to localStorage
+                localStorage.setItem("pageantScores", JSON.stringify(scoresData));
+
+                alert("Demo scores loaded!");
             } catch (err) {
                 console.error("Error parsing JSON:", err);
                 alert("Could not parse demo JSON.");
@@ -832,5 +1027,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('exportBtn').addEventListener('click', exportToCSV);
     document.getElementById('clearBtn').addEventListener('click', clearAllData);
     document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
-    document.getElementById("loadDemoBtn").addEventListener("click", loadDemoContestants);
+    document.getElementById("loadDemoBtn").addEventListener("click", loadAllDemo);
 });
