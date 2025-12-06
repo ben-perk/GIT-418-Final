@@ -114,11 +114,11 @@ function updateContestantDisplay() {
     const display = document.getElementById('contestantListDisplay');
     if (display) {
         let html = '<h4>Demo Contestants Loaded</h4>';
-        html += '<table class="demo-table">';
-        html += '<thead><tr><th>Contestant #</th><th>Name</th></tr></thead>';
+        html += '<table style="border-collapse: collapse; width: 100%;">';
+        html += '<thead><tr style="background-color: #000; color: #fff;"><th style="border: 1px solid #000; padding: 8px;">Contestant #</th><th style="border: 1px solid #000; padding: 8px;">Name</th></tr></thead>';
         html += '<tbody>';
         contestants.forEach(c => {
-            html += `<tr><td><strong>${c}</strong></td><td>${contestantNames[c]}</td></tr>`;
+            html += `<tr><td style="border: 1px solid #000; padding: 8px;"><strong>${c}</strong></td><td style="border: 1px solid #000; padding: 8px;">${contestantNames[c]}</td></tr>`;
         });
         html += '</tbody></table>';
         display.innerHTML = html;
@@ -130,11 +130,11 @@ function updateJudgeDisplay() {
     const display = document.getElementById('judgeListDisplay');
     if (display) {
         let html = '<h4>Demo Judges Loaded</h4>';
-        html += '<table class="demo-table">';
-        html += '<thead><tr><th>Judge Number</th></tr></thead>';
+        html += '<table style="border-collapse: collapse; width: 100%;">';
+        html += '<thead><tr style="background-color: #000; color: #fff;"><th style="border: 1px solid #000; padding: 8px;">Judge Number</th></tr></thead>';
         html += '<tbody>';
         judges.forEach(j => {
-            html += `<tr><td><strong>Judge #${j}</strong></td></tr>`;
+            html += `<tr><td style="border: 1px solid #000; padding: 8px;"><strong>Judge #${j}</strong></td></tr>`;
         });
         html += '</tbody></table>';
         display.innerHTML = html;
@@ -146,19 +146,18 @@ function updateCategoryDisplay() {
     const display = document.getElementById('categoryInputsDisplay');
     if (display) {
         let html = '<h4>Demo Categories Loaded</h4>';
-        html += '<table class="demo-table">';
-        html += '<thead><tr><th>Category ID</th><th>Category Name</th></tr></thead>';
+        html += '<table style="border-collapse: collapse; width: 100%;">';
+        html += '<thead><tr style="background-color: #000; color: #fff;"><th style="border: 1px solid #000; padding: 8px;">Category ID</th><th style="border: 1px solid #000; padding: 8px;">Category Name</th></tr></thead>';
         html += '<tbody>';
         categories.forEach(c => {
-            html += `<tr><td>${c}</td><td>${categoryNames[c]}</td></tr>`;
+            html += `<tr><td style="border: 1px solid #000; padding: 8px;">${c}</td><td style="border: 1px solid #000; padding: 8px;">${categoryNames[c]}</td></tr>`;
         });
         html += '</tbody></table>';
         display.innerHTML = html;
     }
 }
 
-//  Save and Load Functions
-
+// Save and Load Functions
 function saveToStorage() {
     try {
         localStorage.setItem('pageantScores', JSON.stringify(scoresData));
@@ -210,9 +209,7 @@ function loadFromStorage() {
     }
 }
 
-// SETUP FUNCTIONS
-
-//contestants
+// SETUP FUNCTIONS - Contestants
 function setupContestants() {
     console.log('setupContestants called');
     const numInput = document.getElementById('numContestants');
@@ -253,7 +250,7 @@ function setupContestants() {
     console.log('Saved to localStorage');
 }
 
-//category
+// SETUP FUNCTIONS - Categories
 function setupCategories() {
     console.log('setupCategories called');
     const numInput = document.getElementById('numCategories');
@@ -287,13 +284,13 @@ function setupCategories() {
 
         for (let i = 0; i < categories.length; i++) {
             const catKey = categories[i];
-            html += '<div class="mb-3">';
-            html += '<label for="categoryName' + i + '" class="form-label">Category #' + (i + 1) + ' Name:</label>';
-            html += '<input type="text" id="categoryName' + i + '" class="form-control" placeholder="Enter category name" value="' + categoryNames[catKey] + '">';
+            html += '<div style="margin-bottom: 1.5rem;">';
+            html += '<label for="categoryName' + i + '" style="display: block; color: #000; font-weight: bold; margin-bottom: 0.5rem;">Category #' + (i + 1) + ' Name:</label>';
+            html += '<input type="text" id="categoryName' + i + '" style="width: 100%; padding: 8px; border: 1px solid #000;" placeholder="Enter category name" value="' + categoryNames[catKey] + '">';
             html += '</div>';
         }
 
-        html += '<button class="btn btn-success" id="saveCatBtn">Save Category Names</button>';
+        html += '<button style="background-color: #000; color: #fff; border: 2px solid #000; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: bold; cursor: pointer;" id="saveCatBtn">Save Category Names</button>';
         display.innerHTML = html;
 
         document.getElementById('saveCatBtn').addEventListener('click', saveCategoryNames);
@@ -303,7 +300,7 @@ function setupCategories() {
     localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
 }
 
-//names of categories
+// Save category names
 function saveCategoryNames() {
     for (let i = 0; i < categories.length; i++) {
         const catKey = categories[i];
@@ -323,7 +320,7 @@ function saveCategoryNames() {
     alert('Category names saved!');
 }
 
-//judges
+// SETUP FUNCTIONS - Judges
 function setupJudges() {
     console.log('setupJudges called');
     const numInput = document.getElementById('numJudges');
@@ -363,8 +360,7 @@ function setupJudges() {
     console.log('Judges saved to localStorage');
 }
 
- 
-//put your scores here
+// Generate score entry tables
 function generateScoreTables() {
     const scoreTableSection = document.getElementById('scoreTableSection');
     const scoreTableContainer = document.getElementById('scoreTableContainer');
@@ -395,15 +391,15 @@ function generateScoreTables() {
         const category = categories[cat];
         const categoryName = categoryNames[category];
 
-        html += '<div class="card">';
-        html += '<div class="card-header">' + categoryName + '</div>';
-        html += '<table class="table-bordered">';
+        html += '<div style="background: #fff; border: 2px solid #000; padding: 1.5rem; margin-bottom: 2rem;">';
+        html += '<div style="background-color: #000; color: #fff; padding: 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; font-weight: bold; border-bottom: 2px solid #000;">' + categoryName + '</div>';
+        html += '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">';
         html += '<thead>';
         html += '<tr>';
-        html += '<th>Contestant #</th>';
+        html += '<th style="background-color: #000; color: #fff; padding: 10px; text-align: left; font-weight: bold; border: 1px solid #000;">Contestant #</th>';
 
         for (let j = 0; j < judges.length; j++) {
-            html += '<th>Judge #' + judges[j] + '</th>';
+            html += '<th style="background-color: #000; color: #fff; padding: 10px; text-align: left; font-weight: bold; border: 1px solid #000;">Judge #' + judges[j] + '</th>';
         }
 
         html += '</tr>';
@@ -413,7 +409,7 @@ function generateScoreTables() {
         for (let c = 0; c < contestants.length; c++) {
             const contestantNum = contestants[c];
             html += '<tr>';
-            html += '<td><strong>Contestant #' + contestantNum + '</strong></td>';
+            html += '<td style="padding: 10px; border: 1px solid #000;"><strong>Contestant #' + contestantNum + '</strong></td>';
 
             for (let j = 0; j < judges.length; j++) {
                 const judgeNum = judges[j];
@@ -428,8 +424,8 @@ function generateScoreTables() {
                     }
                 }
                 
-                html += '<td>';
-                html += '<input type="number" id="' + inputId + '" class="form-control" min="1" max="1000" value="' + existingScore + '">';
+                html += '<td style="padding: 10px; border: 1px solid #000;">';
+                html += '<input type="number" id="' + inputId + '" style="width: 100%; padding: 8px; border: 1px solid #000;" min="1" max="1000" value="' + existingScore + '">';
                 html += '</td>';
             }
 
@@ -438,16 +434,17 @@ function generateScoreTables() {
 
         html += '</tbody>';
         html += '</table>';
-        html += '<button class="btn btn-success" onclick="saveScoresForCategory(\'' + category + '\')">Save ' + categoryName + ' Scores</button>';
+        html += '<button style="background-color: #000; color: #fff; border: 2px solid #000; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem;" onclick="saveScoresForCategory(\'' + category + '\')">Save ' + categoryName + ' Scores</button>';
         html += '</div>';
     }
 
-    html += '<button class="btn btn-primary" onclick="calculateFinalScores()">Calculate Final Scores</button>';
+    html += '<button style="background-color: #000; color: #fff; border: 2px solid #000; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: bold; cursor: pointer;" onclick="calculateFinalScores()">Calculate Final Scores</button>';
 
     scoreTableContainer.innerHTML = html;
     scoreTableSection.style.display = 'block';
 }
 
+// Save scores for a category
 function saveScoresForCategory(category) {
     scoresData[category] = [];
 
@@ -479,6 +476,7 @@ function saveScoresForCategory(category) {
     saveToStorage();
 }
 
+// Toggle outliers
 function toggleOutliers() {
     dropOutliers = !dropOutliers;
     const toggle = document.getElementById('outlierToggle');
@@ -487,7 +485,7 @@ function toggleOutliers() {
     }
 }
 
-//clear
+// Clear all data
 function clearAllData() {
     if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
         contestants = [];
@@ -500,7 +498,7 @@ function clearAllData() {
         }
         dropOutliers = false;
         currentCarouselIndex = 0;
-      //outliers  
+      
         localStorage.removeItem('pageantContestants');
         localStorage.removeItem('pageantJudges');
         localStorage.removeItem('pageantCategories');
@@ -522,7 +520,7 @@ function clearAllData() {
     }
 }
 
-//export make it look better later
+// Export to CSV
 function exportToCSV() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please enter some scores first.');
@@ -549,6 +547,7 @@ function exportToCSV() {
     alert('Scores exported successfully!');
 }
 
+// Get adjusted scores (remove high and low)
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
         return scores;
@@ -578,7 +577,6 @@ function getAdjustedScores(scores) {
 }
 
 // CAROUSEL FOR WINNERS
-
 function carouselNext() {
     const slides = document.querySelectorAll('.carousel-slide-inline');
     if (slides.length === 0) return;
@@ -608,8 +606,7 @@ function carouselShow(n) {
     dots[currentCarouselIndex].classList.add('active');
 }
 
-// CALCULATE RESULTS
-
+// CALCULATE FINAL SCORES
 function calculateFinalScores() {
     const contestantScores = {};
 
@@ -695,6 +692,7 @@ function calculateFinalScores() {
     displayFinalScores(results);
 }
 
+// DISPLAY FINAL SCORES
 function displayFinalScores(results) {
     const display = document.getElementById('finalScoresDisplay');
     let html = '';
@@ -703,8 +701,8 @@ function displayFinalScores(results) {
         html += '<p><em>Outliers Removed (Highest and Lowest scores per category)</em></p>';
     }
 
-    html += '<div class="card border-success">';
-    html += '<div class="card-header">WINNERS & SUMMARY</div>';
+    html += '<div style="background: #fff; border: 2px solid #000; padding: 1.5rem; margin-bottom: 2rem;">';
+    html += '<div style="background-color: #000; color: #fff; padding: 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; font-weight: bold; border-bottom: 2px solid #000;">WINNERS & SUMMARY</div>';
 
     html += '<p><strong>Ranking Method:</strong> Total Scores</p>';
 
@@ -748,12 +746,11 @@ function displayFinalScores(results) {
     html += '</div>';
 
     if (results.length >= 1) {
-        html += '<div class="card border-warning">';
-        html += '<div class="card-header">TOP 3 WINNERS CAROUSEL</div>';
+        html += '<div style="background: #fff; border: 2px solid #000; padding: 1.5rem; margin-bottom: 2rem;">';
+        html += '<div style="background-color: #000; color: #fff; padding: 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; font-weight: bold; border-bottom: 2px solid #000;">TOP 3 WINNERS CAROUSEL</div>';
         html += '<div class="carousel-container-inline">';
         html += '<div class="carousel-wrapper-inline">';
 
-        // Carousel slides 
         for (let i = 2; i >= 0; i--) {
             if (i >= results.length) continue;
             
@@ -761,7 +758,6 @@ function displayFinalScores(results) {
             const isActive = i === 2 ? ' active' : '';
             let medal = '';
 
-            // Placements photos
             if (i === 0) {
                 medal = 'Photos/1st.png';
             } else if (i === 1) {
@@ -794,8 +790,8 @@ function displayFinalScores(results) {
         html += '</div>';
     }
 
-    html += '<div class="card">';
-    html += '<div class="card-header">Detailed Breakdown by Contestant</div>';
+    html += '<div style="background: #fff; border: 2px solid #000; padding: 1.5rem; margin-bottom: 2rem;">';
+    html += '<div style="background-color: #000; color: #fff; padding: 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; font-weight: bold; border-bottom: 2px solid #000;">Detailed Breakdown by Contestant</div>';
 
     const rankLabels = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
 
@@ -803,13 +799,12 @@ function displayFinalScores(results) {
         const result = results[i];
         const rankLabel = rankLabels[i] || 'Rank #' + (i + 1);
         
-        html += '<div class="mb-4">';
+        html += '<div style="margin-bottom: 2rem;">';
         html += '<h5>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h5>';
       
-        //category winners table
         html += '<h6>Category Breakdown:</h6>';
-        html += '<table class="table-sm">';
-        html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
+        html += '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.95rem; margin: 10px 0;">';
+        html += '<thead><tr style="background-color: #000; color: #fff;"><th style="border: 1px solid #000; padding: 8px; text-align: left;">Category</th><th style="border: 1px solid #000; padding: 8px; text-align: left;">Total Score</th><th style="border: 1px solid #000; padding: 8px; text-align: left;">Average</th></tr></thead>';
         html += '<tbody>';
         
         for (let j = 0; j < categories.length; j++) {
@@ -827,9 +822,9 @@ function displayFinalScores(results) {
             const categoryName = categoryNames[category];
             const categoryAverage = result.categoryAverages[category];
             html += '<tr>';
-            html += '<td>' + categoryName + '</td>';
-            html += '<td><strong>' + totalCategoryScore + '</strong></td>';
-            html += '<td><strong>' + categoryAverage + '</strong></td>';
+            html += '<td style="border: 1px solid #000; padding: 8px;">' + categoryName + '</td>';
+            html += '<td style="border: 1px solid #000; padding: 8px;"><strong>' + totalCategoryScore + '</strong></td>';
+            html += '<td style="border: 1px solid #000; padding: 8px;"><strong>' + categoryAverage + '</strong></td>';
             html += '</tr>';
         }
         
@@ -844,22 +839,21 @@ function displayFinalScores(results) {
 
     html += '</div>';
 
-    //check if a judge was being shady
-    html += '<div class="card border-info">';
-    html += '<div class="card-header">Judge Overall Averages Per Contestant</div>';
-    html += '<table class="table-sm">';
-    html += '<thead><tr><th>Contestant #</th>';
+    html += '<div style="background: #fff; border: 2px solid #000; padding: 1.5rem; margin-bottom: 2rem;">';
+    html += '<div style="background-color: #000; color: #fff; padding: 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; font-weight: bold; border-bottom: 2px solid #000;">Judge Overall Averages Per Contestant</div>';
+    html += '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.95rem; margin: 10px 0;">';
+    html += '<thead><tr style="background-color: #000; color: #fff;"><th style="border: 1px solid #000; padding: 8px; text-align: left;">Contestant #</th>';
     
     for (let j = 0; j < judges.length; j++) {
-        html += '<th>Judge #' + judges[j] + '</th>';
+        html += '<th style="border: 1px solid #000; padding: 8px; text-align: left;">Judge #' + judges[j] + '</th>';
     }
-    html += '<th>Judge Avg</th></tr></thead>';
+    html += '<th style="border: 1px solid #000; padding: 8px; text-align: left;">Judge Avg</th></tr></thead>';
     html += '<tbody>';
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         html += '<tr>';
-        html += '<td><strong>Contestant #' + result.contestantNumber + '</strong></td>';
+        html += '<td style="border: 1px solid #000; padding: 8px;"><strong>Contestant #' + result.contestantNumber + '</strong></td>';
 
         const judgeAverages = {};
         for (let c = 0; c < categories.length; c++) {
@@ -889,7 +883,7 @@ function displayFinalScores(results) {
                 }
                 judgeAvg = (judgeTotal / judgeAverages[judgeNum].length).toFixed(2);
             }
-            html += '<td>' + judgeAvg + '</td>';
+            html += '<td style="border: 1px solid #000; padding: 8px;">' + judgeAvg + '</td>';
         }
 
         let judgeOverallAvg = '-';
@@ -900,7 +894,7 @@ function displayFinalScores(results) {
             }
             judgeOverallAvg = (totalJudgeScores / allJudgeScores.length).toFixed(2);
         }
-        html += '<td><strong>' + judgeOverallAvg + '</strong></td>';
+        html += '<td style="border: 1px solid #000; padding: 8px;"><strong>' + judgeOverallAvg + '</strong></td>';
         html += '</tr>';
     }
 
@@ -910,8 +904,7 @@ function displayFinalScores(results) {
     display.innerHTML = html;
 }
 
-// Accordion
-
+// jQuery Accordion initialization
 $(document).ready(function() {
     $("#accordion").accordion({
         collapsible: true,
@@ -919,18 +912,26 @@ $(document).ready(function() {
     });
 });
 
-// Load stored data from last time
-
+// Load stored data on page load
 loadFromStorage();
 
-// Event listeners
+// Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('createContestantBtn').addEventListener('click', setupContestants);
-    document.getElementById('createCategoryBtn').addEventListener('click', setupCategories);
-    document.getElementById('createJudgeBtn').addEventListener('click', setupJudges);
-    document.getElementById('calculateBtn').addEventListener('click', calculateFinalScores);
-    document.getElementById('exportBtn').addEventListener('click', exportToCSV);
-    document.getElementById('clearBtn').addEventListener('click', clearAllData);
-    document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
-    document.getElementById("loadDemoBtn").addEventListener("click", loadAllDemo);
+    const createContestantBtn = document.getElementById('createContestantBtn');
+    const createCategoryBtn = document.getElementById('createCategoryBtn');
+    const createJudgeBtn = document.getElementById('createJudgeBtn');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const outlierToggle = document.getElementById('outlierToggle');
+    const loadDemoBtn = document.getElementById('loadDemoBtn');
+
+    if (createContestantBtn) createContestantBtn.addEventListener('click', setupContestants);
+    if (createCategoryBtn) createCategoryBtn.addEventListener('click', setupCategories);
+    if (createJudgeBtn) createJudgeBtn.addEventListener('click', setupJudges);
+    if (calculateBtn) calculateBtn.addEventListener('click', calculateFinalScores);
+    if (exportBtn) exportBtn.addEventListener('click', exportToCSV);
+    if (clearBtn) clearBtn.addEventListener('click', clearAllData);
+    if (outlierToggle) outlierToggle.addEventListener('change', toggleOutliers);
+    if (loadDemoBtn) loadDemoBtn.addEventListener('click', loadAllDemo);
 });
